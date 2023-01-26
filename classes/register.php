@@ -1,5 +1,9 @@
 <?php
- class Register{
+ class Register extends userType{
+
+    function __construct(){
+        
+    }
 
 
     /**
@@ -26,7 +30,6 @@
 
         return array("status"=>$status,"message"=>$message);
     }
-
 
 
  }

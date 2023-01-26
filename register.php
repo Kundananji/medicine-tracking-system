@@ -63,7 +63,7 @@
                     <p class="text-center small">Enter the details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" novalidate id="register-form">
                     <div class="col-12">
                       <label for="yourName" class="form-label">Name</label>
                       <input type="text" name="name" class="form-control" id="yourName" required>
@@ -155,6 +155,7 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/register.js"></script>
 
 </body>
 
