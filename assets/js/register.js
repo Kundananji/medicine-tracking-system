@@ -9,6 +9,7 @@
             let address = $('#yourAddress').val();
             let email = $('#yourEmail').val();
             let username= $('#yourUsername').val();
+            let userTypeId= $('#yourUserType').val();
             let password = $('#yourPassword').val();
             let passwordConfirm = $('#yourPasswordConfirm').val();
 
@@ -26,6 +27,10 @@
             }
             if(!username){
                 alert('Please enter username');
+                return;
+            }
+            if(!userTypeId){
+                alert('Please select user Type');
                 return;
             }
             if(!password){
@@ -47,6 +52,7 @@
                     address:address,
                     email:email,
                     username: username,
+                    userTypeId: userTypeId,
                     password:password,
                     passwordConfirm:passwordConfirm
 

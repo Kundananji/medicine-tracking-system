@@ -1,3 +1,10 @@
+<?php
+   include('classes/database.php');
+   include('classes/user-type.php');
+  
+   $userType = new userType();
+   $userTypes = $userType->getUserTypes();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -104,6 +111,22 @@
                       <label for="yourPasswordConfirm" class="form-label">Confirm Password</label>
                       <input type="password" name="passwordConfirm" class="form-control" id="yourPasswordConfirm" required>
                       <div class="invalid-feedback">Please confirm password!</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="yourUserType" class="form-label">Select User Type</label>
+                      <select type="text" name="userType" class="form-control" id="yourUserType" required>
+                        <option value="">--Select User Type --</option>
+                        <?php
+                         foreach($userTypes as $userType){
+                           echo'<option value="'.$userType->getId().'">'.$userType->getName().'</option>';
+                         }
+
+
+                        ?>
+
+                     </select>
+                      <div class="invalid-feedback">Please select user type!</div>
                     </div>
 
                     <div class="col-12">

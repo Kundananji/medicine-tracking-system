@@ -10,11 +10,10 @@ class userType{
   * @param name : name of the user type
   * @param description: description of user type;
   */
- function __construct($id,$name,$description){
+ function __construct($id=null,$name=null,$description=null){
     $this->id=$id;
     $this->name=$name;
     $this->description=$description;
-
  }
 
  /**
@@ -25,10 +24,10 @@ class userType{
  function getUserTypes(){
     $userTypes = array();
     $sql="SELECT * FROM user_type ORDER BY name";
-    $query = Database::$connection->query($sql);
+    $query = Database::getConnection()->query($sql);
     if($query){
         while($row=$query->fetch_assoc()){
-            $userTypes[]=new UserType($row['id'],$row['name'],$row['description']);
+            $userTypes[]=new UserType($row['ID'],$row['Name'],$row['Description']);
         }
     }
     return $userTypes;

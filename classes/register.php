@@ -1,8 +1,12 @@
 <?php
- class Register extends userType{
+ class Register {
+    
+    private $userType;
 
-    function __construct(){
-        
+    //inject userType object into Register Class
+    function __construct($userType){
+        $this->userType=$userType;
+
     }
 
 
@@ -24,11 +28,28 @@
      *          message: add more details of the status
      *          
      */
-    function registerUser($name,$address,$email,$userType,$password,$confirmPassword){
+    function registerUser($name,$address,$email,$username,$userTypeId,$password,$confirmPassword){
         $status = 'success';
         $message = 'Account created successfully!';
 
+        if($password!=$confirmPassword){
+            $status ='failed';
+            $message="Passwords do not match";
+        }
+
+        $sql = "INSERT INTO `user`( `Name`, `Address`, `Email`, `Username`, `password`, `User_Type_ID`) VALUES ('$name','$address','$email','$username','$password','$userTypeId')";
+
+        $query = Database::getConnection()->query($sql);
+        if(!$query || Database::getConnection()->affected_rows ==0 ){
+            $status ='failed';
+            $message="Sorry, we failed to create the account";
+        }
+
         return array("status"=>$status,"message"=>$message);
+    }
+
+    function getUserTypes(){
+        return $this->userType->getUserTypes();
     }
 
 
