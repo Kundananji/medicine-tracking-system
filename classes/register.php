@@ -32,10 +32,80 @@
         $status = 'success';
         $message = 'Account created successfully!';
 
+        if(empty($name)){
+            $status="failed";
+            $message="Name is required";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        if(empty($address)){
+            $status="failed";
+            $message="Address is required";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        if(empty($email)){
+            $status="failed";
+            $message="Email is required";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        if(empty($username)){
+            $status="failed";
+            $message="Username is required";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        if(empty($userTypeId)){
+            $status="failed";
+            $message="User Type is required";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        if(empty($password)){
+            $status="failed";
+            $message="Password is required";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        //validate name
+        if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
+            $status="failed";
+            $message="Only letters and or white space is allowedin the name";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        
+        //validate username
+        if (!preg_match("/^[a-zA-Z][a-zA-Z0-9]+$/",$name)) {
+            $status="failed";
+            $message="Only letters and numbers are allowed in the username. However, it can only start with a letter";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        //validate email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $status="failed";
+            $message="Email is not in correct form";
+            return array("status"=>$status,"message"=>$message);
+        }
+
+        //validate user type Id
+        if ((int)$userTypeId == 0) {
+            $status="failed";
+            $message="The user type entered is invalid";
+            return array("status"=>$status,"message"=>$message);
+        }
+        
+        
+        //check if typed passwords match
         if($password!=$confirmPassword){
             $status ='failed';
             $message="Passwords do not match";
+            return array("status"=>$status,"message"=>$message);
         }
+
+
 
         $sql = "INSERT INTO `user`( `Name`, `Address`, `Email`, `Username`, `password`, `User_Type_ID`) VALUES ('$name','$address','$email','$username','$password','$userTypeId')";
 
