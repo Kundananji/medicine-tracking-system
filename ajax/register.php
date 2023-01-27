@@ -1,7 +1,7 @@
 <?php
- include('classes/database.php');
- include('classes/user-type.php');
- include('classes/register.php');
+ include('../classes/database.php');
+ include('../classes/user-type.php');
+ include('../classes/register.php');
 
  $userType = new userType();
 
@@ -9,9 +9,9 @@
  $address=$_POST['address'];
  $email=$_POST['email'];
  $username=$_POST['username'];
- $userType=$_POST['userType'];
+ $userTypeId=$_POST['userTypeId'];
  $password=$_POST['password'];
- $confirmPassword=$_POST['confirmPassword'];
+ $confirmPassword=$_POST['passwordConfirm'];
 
  $register = new Register($userType);
 

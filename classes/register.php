@@ -76,10 +76,10 @@
         }
 
         
-        //validate username
-        if (!preg_match("/^[a-zA-Z][a-zA-Z0-9]+$/",$name)) {
+        //validate name
+        if (!preg_match("/^[a-zA-Z][a-zA-Z0-9]+$/",$username)) {
             $status="failed";
-            $message="Only letters and numbers are allowed in the username. However, it can only start with a letter";
+            $message="Only letters and numbers are allowed in the name. However, it can only start with a letter";
             return array("status"=>$status,"message"=>$message);
         }
 
@@ -105,9 +105,29 @@
             return array("status"=>$status,"message"=>$message);
         }
 
+        $hashedPassword = password_hash($password,PASSWORD_DEFAULT);
+
+        //check if email is in use
+
+        $sql="SELECT `Email` FROM `user` WHERE `Email`='$email'";
+        $query = Database::getConnection()->query($sql);
+        if($query->num_rows >0){
+            $status="failed";
+            $message="The email is already in use.";
+            return array("status"=>$status,"message"=>$message); 
+        }
+        
+        //check if username is already in use
+        $sql="SELECT `Username` FROM `user` WHERE `Username`='$username'";
+        $query = Database::getConnection()->query($sql);
+        if($query->num_rows >0){
+            $status="failed";
+            $message="The username is already in use.";
+            return array("status"=>$status,"message"=>$message); 
+        }
 
 
-        $sql = "INSERT INTO `user`( `Name`, `Address`, `Email`, `Username`, `password`, `User_Type_ID`) VALUES ('$name','$address','$email','$username','$password','$userTypeId')";
+        $sql = "INSERT INTO `user`( `Name`, `Address`, `Email`, `Username`, `password`, `User_Type_ID`) VALUES ('$name','$address','$email','$username','$hashedPassword ','$userTypeId')";
 
         $query = Database::getConnection()->query($sql);
         if(!$query || Database::getConnection()->affected_rows ==0 ){
