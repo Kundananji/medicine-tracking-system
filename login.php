@@ -63,7 +63,7 @@
                     <p class="text-center small">Enter your username & password to login</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" novalidate id="form-login">
 
                     <div class="col-12">
                       <label for="yourUsername" class="form-label">Username</label>
@@ -129,6 +129,8 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <!-- custom login script -->
+  <script src="assets/js/login.js"></script>
 
 </body>
 
