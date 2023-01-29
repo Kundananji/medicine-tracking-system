@@ -20,8 +20,19 @@
            if($mUserType->getCanAddMedicine()){
           ?>
           <li>
-            <a href="javascript:void(0)" onclick="Medicines.addMedicine()">
+            <a href="javascript:void(0)" onclick="Medicine.addMedicine()">
               <i class="bi bi-circle"></i><span>Add New Medicine</span>
+            </a>
+          </li>
+          <?php
+           }
+          ?>
+         <?php
+           if($mUserType->getCanViewMedicine()){
+          ?>
+          <li>
+            <a href="javascript:void(0)" onclick="Medicine.viewMedicine()">
+              <i class="bi bi-circle"></i><span>View Medicine</span>
             </a>
           </li>
           <?php

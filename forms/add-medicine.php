@@ -49,8 +49,6 @@ $manufacturers = $manufacturer->getUsers();
                 <input type="text" class="form-control" name="serialNumber" placeholder="Serial Number" id="serialNumber"/>
             </div>
 
-
-
             <div class="form-group m-3">
                 <label for="name">LOT Number</label>
                 <input type="text" class="form-control" name="lotNumber" placeholder="LOT Number" id="lotNumber"/>
@@ -71,7 +69,6 @@ $manufacturers = $manufacturer->getUsers();
                      foreach($manufacturers as $thisManufacturer){
                        echo'<option value="'.$thisManufacturer->getId().'" '.(isset($_SESSION['userTypeId']) && $_SESSION['userTypeId']==$thisManufacturer->getUserTypeId() && $_SESSION['userId'] == $thisManufacturer->getId()?" selected":"").'>'.$thisManufacturer->getName().'</option>';
                      }
-
 
                     ?>
                 </select>
