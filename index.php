@@ -1,3 +1,17 @@
+<?php
+session_start();
+if(!isset($_SESSION['userId'])) header('location:login.php');
+$name= $_SESSION['name'];
+$userId =  $_SESSION['userId'];
+$userTypeId = $_SESSION['userTypeId'];
+
+include('classes/database.php');
+include('classes/user-type.php');
+$userType = new userType($userTypeId);
+$mUserType=$userType->getUserByTypeId();
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,9 +19,9 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <title>Dashboard</title>
+  <meta content="Medicine Tracking System Dashboard allows you to report notification related to medicine." name="description">
+  <meta content="Medicine Traacking System, Dashboard, Medicine notifications" name="keywords">
 
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
@@ -53,8 +67,8 @@
 
     <section class="section dashboard">
       <div class="row">
-         <div class="col">
-            <p>Page Content Comes here</p>
+         <div class="col" id="page-content">
+            <p>Welcome to the Medicine Tracking System. A system that allows you track medicne through the medical supply chain from the manufacturer to the customer.</p>
          </div>
       </div>
     </section>

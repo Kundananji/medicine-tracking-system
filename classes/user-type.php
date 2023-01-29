@@ -3,6 +3,8 @@ class userType{
  private $id;
  private $name;
  private $description;
+ private $canAddMedicine;
+ private $canViewMedicine;
 
  /**
   * iitialize new user Type
@@ -23,14 +25,37 @@ class userType{
   */
  function getUserTypes(){
     $userTypes = array();
-    $sql="SELECT * FROM user_type ORDER BY name";
+    $sql="SELECT `ID`, `Name`, `Description`, `Can_Add_Medicine`, `Can_View_Medicine`, `Can_Sale`, `Can_Buy`, `Can_Receive`, `Can_Deliver`, `Can_Dispense`, `Can_View_Report`, `Can_Report_Damage` FROM user_type ORDER BY name";
     $query = Database::getConnection()->query($sql);
     if($query){
         while($row=$query->fetch_assoc()){
-            $userTypes[]=new UserType($row['ID'],$row['Name'],$row['Description']);
+            $mUserType=new UserType($row['ID'],$row['Name'],$row['Description']);
+            $mUserType->setCanAddMedicine($row['Can_Add_Medicine']);
+            $mUserType->setCanViewMedicine($row['Can_View_Medicine']);
+            $userTypes[]=$mUserType;
         }
     }
     return $userTypes;
+ }
+
+ /**
+  * function to get a user type object by the given type
+  * @return userType object
+  *
+  */
+ function getUserByTypeId(){
+    $userType = null;
+    $sql="SELECT `ID`, `Name`, `Description`, `Can_Add_Medicine`, `Can_View_Medicine`, `Can_Sale`, `Can_Buy`, `Can_Receive`, `Can_Deliver`, `Can_Dispense`, `Can_View_Report`, `Can_Report_Damage` FROM user_type WHERE ID =".$this->id;
+    $query = Database::getConnection()->query($sql);
+    if($query){
+        if($row=$query->fetch_assoc()){
+            $userType=new UserType($row['ID'],$row['Name'],$row['Description']);
+            $userType->setCanAddMedicine($row['Can_Add_Medicine']);
+            $userType->setCanViewMedicine($row['Can_View_Medicine']);
+        }
+    }
+
+    return $userType;
  }
 
 
@@ -90,6 +115,46 @@ class userType{
  public function setDescription($description)
  {
   $this->description = $description;
+
+  return $this;
+ }
+
+ /**
+  * Get the value of canAddMedicine
+  */ 
+ public function getCanAddMedicine()
+ {
+  return $this->canAddMedicine;
+ }
+
+ /**
+  * Set the value of canAddMedicine
+  *
+  * @return  self
+  */ 
+ public function setCanAddMedicine($canAddMedicine)
+ {
+  $this->canAddMedicine = $canAddMedicine;
+
+  return $this;
+ }
+
+ /**
+  * Get the value of canViewMedicine
+  */ 
+ public function getCanViewMedicine()
+ {
+  return $this->canViewMedicine;
+ }
+
+ /**
+  * Set the value of canViewMedicine
+  *
+  * @return  self
+  */ 
+ public function setCanViewMedicine($canViewMedicine)
+ {
+  $this->canViewMedicine = $canViewMedicine;
 
   return $this;
  }

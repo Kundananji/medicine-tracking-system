@@ -5,13 +5,13 @@
 
  $userType = new userType();
 
- $name=$_POST['name'];
- $address=$_POST['address'];
- $email=$_POST['email'];
- $username=$_POST['username'];
- $userTypeId=$_POST['userTypeId'];
- $password=$_POST['password'];
- $confirmPassword=$_POST['passwordConfirm'];
+ $name=trim($_POST['name']);
+ $address=trim($_POST['address']);
+ $email=trim($_POST['email']);
+ $username=trim($_POST['username']);
+ $userTypeId=trim($_POST['userTypeId']);
+ $password=trim($_POST['password']);
+ $confirmPassword=trim($_POST['passwordConfirm']);
 
  $register = new Register($userType);
 

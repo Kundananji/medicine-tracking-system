@@ -69,9 +69,9 @@
         }
 
         //validate name
-        if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
+        if (!preg_match("/^[a-zA-Z][a-zA-Z-' .]+$/",$name)) {
             $status="failed";
-            $message="Only letters and or white space is allowedin the name";
+            $message="Only letters and or white space is allowed in the name";
             return array("status"=>$status,"message"=>$message);
         }
 
