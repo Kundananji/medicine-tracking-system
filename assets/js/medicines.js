@@ -1,7 +1,7 @@
 let Medicine = (function ($) {
     "use strict";
    
-   $('#form-add-medicine').on('submit',(e)=>{ 
+   let submitForm = (e)=>{ 
    
        e.preventDefault();
    
@@ -60,6 +60,7 @@ let Medicine = (function ($) {
      $.ajax({
          url:"ajax/save-medicine.php",
          type:"post",
+         dataType:"json",
          data:{
              id:id,
              name:name,
@@ -74,18 +75,18 @@ let Medicine = (function ($) {
          },
          success:(resp)=>{
              if(resp && resp.status=="status"){
-                 viewMedicine;
+                 viewMedicine();
              }else{;
-                 alert('resp.message');
+                 alert(resp.message);
              }
          }
      });
    
-   }); //end submit form-add-medicine
+   }; //end submit form-add-medicine
    
      let addMedicine=(id)=>{
          $.ajax({
-             url:"forms/add-medicine.php",
+             url:"forms/medicine-form.php",
              type:"get",
              data:{
                  id:id
@@ -111,6 +112,7 @@ let Medicine = (function ($) {
    return {
        addMedicine: addMedicine,
        viewMedicine: viewMedicine,
+       submitForm:submitForm
      };
    
    })(jQuery);

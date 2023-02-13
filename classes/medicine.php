@@ -1,348 +1,290 @@
-<?php 
+<?php
+class Medicine implements \JsonSerializable
+{
+  private $id;
+  private $name;
+  private $description;
+  private $manufacturedDate;
+  private $expiryDate;
+  private $gtin;
+  private $serialNumber;
+  private $lotNumber;
+  private $packageDetails;
+  private $manufacturerId;
+  private $manufacturer;
 
-class Medicine{
-    private $id; 
-    private $name; 
-    private $description; 
-    private $manufacturedDate; 
-    private $expiryDate; 
-    private $gtin; 
-    private $serialNumber; 
-    private $lotNumber; 
-    private $packageDetails; 
-    private $manufacturerId;
-
-
-    /**
-     * function to add medicine to database
-     * 
-     */
-    function addMedicine($name,$description,$manufacturedDate,$expiryDate,$gtin,$serialNumber,$lotNumber,$packageDetails,$manufacturerId){
-   
-        //insert medicine    
-        $sql ="INSERT INTO `medicine`( `Name`, `Description`, `Manufactured_Date`, `Expiry_Date`, `GTIN`, `Serial_Number`, `LOT_Number`, `Package_Details`, `Manufacturer_ID`) VALUES (?,?,?,?,?,?,?,?,?)";
-
-         $stmt=Database::getConnection()->prepare($sql);
-         $stmt->bind_param("ssssssssi",$name,$description,$manufacturedDate,$expiryDate,$gtin,$serialNumber,$lotNumber,$packageDetails,$manufacturerId);         
-         if($stmt->execute()){
-            $insertId = $stmt->insert_id;
-            $this->setId($insertId);
-            return $this->getMedicineById();
-         }
-
-        }
-
-    /**
-     * 
-     * function to edit medicine
-     * 
-     *  */   
-    
-     function editMedicine($id,$name,$description,$manufacturedDate,$expiryDate,$gtin,$serialNumber,$lotNumber,$packageDetails,$manufacturerId) : Medicine{
-        $sql ="UPDATE `medicine` SET `Name`=?,`Description`=?,`Manufactured_Date`=?,`Expiry_Date`=?,`GTIN`=?,`Serial_Number`=?,`LOT_Number`=?,`Package_Details`=?,`Manufacturer_ID`=? WHERE ID =?";
-
-        $stmt=Database::getConnection()->prepare($sql);
-        $stmt->bind_param("ssssssssii",$name,$description,$manufacturedDate,$expiryDate,$gtin,$serialNumber,$lotNumber,$packageDetails,$manufacturerId,$id);
-        if($stmt->execute()){
-            return $this->getMedicineById($id);
-        }
-
-        return null;
-
-     }
-
-
-
-    /**
-     * 
-     * Function to fetch medicine by Id
-     * 
-     * 
-     */
-
-    function getMedicineById() : Medicine{
-        $sql ="SELECT `ID`, `Name`, `Description`, `Manufactured_Date`, `Expiry_Date`, `GTIN`, `Serial_Number`, `LOT_Number`, `Package_Details`, `Manufacturer_ID` FROM `medicine` WHERE `ID`=?";
-
+  //Constructor function, creates a new instance of medicine; 
+  function __construct($id = null)
+  {
+    if ($id != null) {
+      try {
+        $sql = "SELECT * FROM medicine WHERE ID=?";
         $stmt = Database::getConnection()->prepare($sql);
-        $stmt->bind_param("i",$this->id);
-        $result = $stmt->get_result();
-        if($result){
-            if($row = $result->fetch_assoc()){
-                return $this->extractMedicine($row);
-            }
-        }
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $query = $stmt->get_result();
+        if ($query) {
+          while ($row = $query->fetch_assoc()) {
+            $this->setId($row['ID']);
+            $this->setName($row['Name']);
+            $this->setDescription($row['Description']);
+            $this->setManufacturedDate($row['Manufactured_Date']);
+            $this->setExpiryDate($row['Expiry_Date']);
+            $this->setGtin($row['GTIN']);
+            $this->setSerialNumber($row['Serial_Number']);
+            $this->setLotNumber($row['LOT_Number']);
+            $this->setPackageDetails($row['Package_Details']);
+            $this->setManufacturerId($row['Manufacturer_ID']);
+            $this->setManufacturer($row['Manufacturer_ID']);
+          } //end while
+        } //end query check
+      } catch (Exception $exception) {
+        throw $exception;
+      } //end catch
+    } //end id check
+  } //end constructor
 
-        return null;
 
-    }
 
-    /**
-     * 
-     * Function to get medicine by manufacturer Id
-     */
+  /**
+   * Function to fetch all records 
+   * @return array of fetched records 
+   * Function to fetch all records 
+   **/
+  function search($searchText)
+  {
+    $records = []; //empty array of records
+    try {
+      $sql = "SELECT * FROM medicine WHERE Name LIKE '%$searchText%' OR LOT_Number='$searchText' OR Serial_Number='$searchText' OR GTIN='$searchText' ";
+      $stmt = Database::getConnection()->prepare($sql);
+      $stmt->execute();
+      $query = $stmt->get_result();
+      if ($query) {
+        while ($row = $query->fetch_assoc()) {
+          $mMedicine = new Medicine;
+          $mMedicine->setId($row['ID']);
+          $mMedicine->setName($row['Name']);
+          $mMedicine->setDescription($row['Description']);
+          $mMedicine->setManufacturedDate($row['Manufactured_Date']);
+          $mMedicine->setExpiryDate($row['Expiry_Date']);
+          $mMedicine->setGtin($row['GTIN']);
+          $mMedicine->setSerialNumber($row['Serial_Number']);
+          $mMedicine->setLotNumber($row['LOT_Number']);
+          $mMedicine->setPackageDetails($row['Package_Details']);
+          $mMedicine->setManufacturerId($row['Manufacturer_ID']);
+          $mMedicine->setManufacturer($row['Manufacturer_ID']);
+          $records[] = $mMedicine;
+        } //end while
+      } //end query check
+    } catch (Exception $exception) {
+      throw $exception;
+    } //end catch
+    return $records;
+  } //end getAllRecords function
 
-    function getMedicineByManufacturer(){
-        $medicines = [];
-        $sql ="SELECT `ID`, `Name`, `Description`, `Manufactured_Date`, `Expiry_Date`, `GTIN`, `Serial_Number`, `LOT_Number`, `Package_Details`, `Manufacturer_ID` FROM `medicine` WHERE `Manufacturer_ID`=? ORDER BY `Name`";
 
+
+  /**
+   * Function to fetch all records 
+   * @return array of fetched records 
+   * Function to fetch all records 
+   **/
+  function getAllRecords()
+  {
+    $records = []; //empty array of records
+    try {
+      $sql = "SELECT * FROM medicine WHERE 1";
+      $stmt = Database::getConnection()->prepare($sql);
+      $stmt->execute();
+      $query = $stmt->get_result();
+      if ($query) {
+        while ($row = $query->fetch_assoc()) {
+          $mMedicine = new Medicine;
+          $mMedicine->setId($row['ID']);
+          $mMedicine->setName($row['Name']);
+          $mMedicine->setDescription($row['Description']);
+          $mMedicine->setManufacturedDate($row['Manufactured_Date']);
+          $mMedicine->setExpiryDate($row['Expiry_Date']);
+          $mMedicine->setGtin($row['GTIN']);
+          $mMedicine->setSerialNumber($row['Serial_Number']);
+          $mMedicine->setLotNumber($row['LOT_Number']);
+          $mMedicine->setPackageDetails($row['Package_Details']);
+          $mMedicine->setManufacturerId($row['Manufacturer_ID']);
+          $mMedicine->setManufacturer($row['Manufacturer_ID']);
+          $records[] = $mMedicine;
+        } //end while
+      } //end query check
+    } catch (Exception $exception) {
+      throw $exception;
+    } //end catch
+    return $records;
+  } //end getAllRecords function
+
+  //function to create or edit instance of medicine
+  function saveMedicine($id, $name, $description, $manufacturedDate, $expiryDate, $gtin, $serialNumber, $lotNumber, $packageDetails, $manufacturerId)
+  {
+    try {
+      //if id is null then we are saving a new record
+      if ((int)$id == 0) {
+        $sql = "INSERT INTO `medicine`(`ID`,`Name`,`Description`,`Manufactured_Date`,`Expiry_Date`,`GTIN`,`Serial_Number`,`LOT_Number`,`Package_Details`,`Manufacturer_ID`) VALUES(?,?,?,?,?,?,?,?,?,?)";
         $stmt = Database::getConnection()->prepare($sql);
-        $stmt->bind_param("i",$this->manufacturerId);
-        $result = $stmt->get_result();
-        if($result){
-            while($row = $result->fetch_assoc()){
-                $medicines[] = $this->extractMedicine($row);
-
-            }
-        }
-        return $medicines;
-
-    }
-
-    /**
-     * 
-     * function to get all medicines
-     */
-
-     function getMedicines(){
-        $medicines = [];
-        $sql ="SELECT `ID`, `Name`, `Description`, `Manufactured_Date`, `Expiry_Date`, `GTIN`, `Serial_Number`, `LOT_Number`, `Package_Details`, `Manufacturer_ID` FROM `medicine` ORDER BY `Name`";
-
+        $stmt->bind_param("issssssssi", $id, $name, $description, $manufacturedDate, $expiryDate, $gtin, $serialNumber, $lotNumber, $packageDetails, $manufacturerId);
+      } else {
+        $sql = "UPDATE `medicine` SET `Name`=?,`Description`=?,`Manufactured_Date`=?,`Expiry_Date`=?,`GTIN`=?,`Serial_Number`=?,`LOT_Number`=?,`Package_Details`=?,`Manufacturer_ID`=? WHERE ID=?";
         $stmt = Database::getConnection()->prepare($sql);
-        $result = $stmt->get_result();
-        if($result){
-            while($row = $result->fetch_assoc()){
-                $medicines[] = $this->extractMedicine($row);
-
-            }
-        }
-        return $medicines;
-
+        $stmt->bind_param("ssssssssii", $name, $description, $manufacturedDate, $expiryDate, $gtin, $serialNumber, $lotNumber, $packageDetails, $manufacturerId, $id);
+      } //end id null check
+      $stmt->execute();
+      $stmt->store_result();
+      $id = $stmt->insert_id == null ? $id : $stmt->insert_id;
+      $stmt->close();
+      return new Medicine($id);
+    } catch (Exception $exception) {
+      throw $exception;
     }
-
-    /**
-     * 
-     * function to extract medicine object from array of fields
-     * @param row : array containing fields
-     * @return medicine object
-     */
-
-     function extractMedicine($row) : Medicine{
-        $mMedicine =new Medicine;
-
-        $mMedicine->setId($row['']);
-        $mMedicine->setName($row['Name']);
-        $mMedicine->setDescription($row['Description']);
-        $mMedicine->setManufacturedDate($row['Manufactured_Date']);
-        $mMedicine->setExpiryDate($row['Expiry_Date']);
-        $mMedicine->setGtin($row['GTIN']);
-        $mMedicine->setSerialNumber($row['Serial_Number']);
-        $mMedicine->setLotNumber($row['LOT_Number']);
-        $mMedicine->setPackageDetails($row['Package_Details']);
-        $mMedicine->setManufacturerId($row['Manufacturer_ID']);
+  } //end save function
 
 
-        return  $mMedicine;
+  function getId()
+  {
+    return $this->id;
+  }
 
-     }
-    
+  function getName()
+  {
+    return $this->name;
+  }
 
-    /**
-     * Get the value of id
-     */ 
-    public function getId()
-    {
-        return $this->id;
-    }
+  function getDescription()
+  {
+    return $this->description;
+  }
 
-    /**
-     * Set the value of id
-     *
-     * @return  self
-     */ 
-    public function setId($id)
-    {
-        $this->id = $id;
+  function getManufacturedDate()
+  {
+    return $this->manufacturedDate;
+  }
 
-        return $this;
-    }
+  function getExpiryDate()
+  {
+    return $this->expiryDate;
+  }
 
-    /**
-     * Get the value of name
-     */ 
-    public function getName()
-    {
-        return $this->name;
-    }
+  function getGtin()
+  {
+    return $this->gtin;
+  }
 
-    /**
-     * Set the value of name
-     *
-     * @return  self
-     */ 
-    public function setName($name)
-    {
-        $this->name = $name;
+  function getSerialNumber()
+  {
+    return $this->serialNumber;
+  }
 
-        return $this;
-    }
+  function getLotNumber()
+  {
+    return $this->lotNumber;
+  }
 
-    /**
-     * Get the value of description
-     */ 
-    public function getDescription()
-    {
-        return $this->description;
-    }
+  function getPackageDetails()
+  {
+    return $this->packageDetails;
+  }
 
-    /**
-     * Set the value of description
-     *
-     * @return  self
-     */ 
-    public function setDescription($description)
-    {
-        $this->description = $description;
+  function getManufacturerId()
+  {
+    return $this->manufacturerId;
+  }
 
-        return $this;
-    }
+  function getManufacturer()
+  {
+    return $this->manufacturer;
+  }
 
-    /**
-     * Get the value of manufacturedDate
-     */ 
-    public function getManufacturedDate()
-    {
-        return $this->manufacturedDate;
-    }
+  /**
+   * Set the value of manufacturer
+   *
+   */
+  public function setManufacturer($manufacturerId)
+  {
+    $this->manufacturer = new User($manufacturerId);
+  }
 
-    /**
-     * Set the value of manufacturedDate
-     *
-     * @return  self
-     */ 
-    public function setManufacturedDate($manufacturedDate)
-    {
-        $this->manufacturedDate = $manufacturedDate;
 
-        return $this;
-    }
 
-    /**
-     * Get the value of expiryDate
-     */ 
-    public function getExpiryDate()
-    {
-        return $this->expiryDate;
-    }
+  function setId($id)
+  {
+    $this->id = $id;
+  }
 
-    /**
-     * Set the value of expiryDate
-     *
-     * @return  self
-     */ 
-    public function setExpiryDate($expiryDate)
-    {
-        $this->expiryDate = $expiryDate;
 
-        return $this;
-    }
+  function setName($name)
+  {
+    $this->name = $name;
+  }
 
-    /**
-     * Get the value of gtin
-     */ 
-    public function getGtin()
-    {
-        return $this->gtin;
-    }
 
-    /**
-     * Set the value of gtin
-     *
-     * @return  self
-     */ 
-    public function setGtin($gtin)
-    {
-        $this->gtin = $gtin;
+  function setDescription($description)
+  {
+    $this->description = $description;
+  }
 
-        return $this;
-    }
 
-    /**
-     * Get the value of serialNumber
-     */ 
-    public function getSerialNumber()
-    {
-        return $this->serialNumber;
-    }
+  function setManufacturedDate($manufacturedDate)
+  {
+    $this->manufacturedDate = $manufacturedDate;
+  }
 
-    /**
-     * Set the value of serialNumber
-     *
-     * @return  self
-     */ 
-    public function setSerialNumber($serialNumber)
-    {
-        $this->serialNumber = $serialNumber;
 
-        return $this;
-    }
+  function setExpiryDate($expiryDate)
+  {
+    $this->expiryDate = $expiryDate;
+  }
 
-    /**
-     * Get the value of lotNumber
-     */ 
-    public function getLotNumber()
-    {
-        return $this->lotNumber;
-    }
 
-    /**
-     * Set the value of lotNumber
-     *
-     * @return  self
-     */ 
-    public function setLotNumber($lotNumber)
-    {
-        $this->lotNumber = $lotNumber;
+  function setGtin($gtin)
+  {
+    $this->gtin = $gtin;
+  }
 
-        return $this;
-    }
 
-    /**
-     * Get the value of packageDetails
-     */ 
-    public function getPackageDetails()
-    {
-        return $this->packageDetails;
-    }
+  function setSerialNumber($serialNumber)
+  {
+    $this->serialNumber = $serialNumber;
+  }
 
-    /**
-     * Set the value of packageDetails
-     *
-     * @return  self
-     */ 
-    public function setPackageDetails($packageDetails)
-    {
-        $this->packageDetails = $packageDetails;
 
-        return $this;
-    }
+  function setLotNumber($lotNumber)
+  {
+    $this->lotNumber = $lotNumber;
+  }
 
-    /**
-     * Get the value of manufacturerId
-     */ 
-    public function getManufacturerId()
-    {
-        return $this->manufacturerId;
-    }
 
-    /**
-     * Set the value of manufacturerId
-     *
-     * @return  self
-     */ 
-    public function setManufacturerId($manufacturerId)
-    {
-        $this->manufacturerId = $manufacturerId;
+  function setPackageDetails($packageDetails)
+  {
+    $this->packageDetails = $packageDetails;
+  }
 
-        return $this;
-    }
-}
+
+  function setManufacturerId($manufacturerId)
+  {
+    $this->manufacturerId = $manufacturerId;
+  }
+
+
+  /**
+   * Function to give a name to an object
+   * @return string : name of object
+   **/
+  function toString()
+  {
+    $names = [];
+    $names[] = $this->name;
+    return implode(" ", $names);
+  }
+
+
+  public function jsonSerialize()
+  {
+    return get_object_vars($this);
+  }
+}//end class

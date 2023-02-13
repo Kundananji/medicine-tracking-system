@@ -37,6 +37,39 @@ $mUserType=$userType->getUserByTypeId();
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
+  <style>
+        #map {
+            width: 100%;
+            height: 600px;
+            background-color: grey;
+        }
+        .full-screen-modal{
+          position: fixed!important;
+          top: 0!important;
+          right: 0!important;
+          bottom: 0!important;
+          left: 0!important;
+          overflow: hidden!important;
+          width: 100%!important;
+          height: 100%!important;
+        }
+        .full-screen-modal-dialog {
+          width: 100%!important;
+          height: 100%!important;
+          margin: 0!important;
+          padding: 0!important;
+          max-width:100%!important;
+        }
+
+        .full-screen-modal-content {
+          height: auto!important;
+          min-height: 100%!important;
+          border-radius: 0!important;
+          width: 100%!important;
+        
+        }
+    </style>
+
   <!-- =======================================================
   * Template Name: NiceAdmin - v2.5.0
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -67,7 +100,7 @@ $mUserType=$userType->getUserByTypeId();
 
     <section class="section dashboard">
       <div class="row">
-         <div class="col" id="page-content">
+         <div class="col table-responsive" id="page-content">
             <p>Welcome to the Medicine Tracking System. A system that allows you track medicne through the medical supply chain from the manufacturer to the customer.</p>
          </div>
       </div>
@@ -78,10 +111,100 @@ $mUserType=$userType->getUserByTypeId();
   <!-- ======= Footer ======= -->
   <?php include('includes/footer.php');?>
 
+
+  <!-- modal: pick location -->
+  <div class="modal fade" id="pickLocationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Pick Location From Map</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="googleMap" style="width:100%;height:400px;">
+
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+ 
+        </div>
+      </div>
+    </div>
+  </div>
+
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <?php include('includes/js-scripts.php') ?>
+
+  <script>
+    let pickLocation = (obj)=>{
+       $('#pickLocationModal').modal('show');
+       loadMap(obj);
+    }
+
+    let loadMap = (obj) =>{
+
+      //initialize map to lusaka
+
+      let currentPosition = new google.maps.LatLng(-15.416667, 28.283333);
+
+      var mapProp= {
+        center:currentPosition,
+        zoom:8,
+      };
+
+      var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+      
+      currentMarker = null;
+
+      
+  // This event listener calls addMarker() when the map is clicked.
+  google.maps.event.addListener(map, "click", (event) => {
+    addMarker(event.latLng, map);
+  });
+
+  // Add a marker at the center of the map.
+  addMarker(currentPosition, map);
+
+
+  // Adds a marker to the map.
+  function addMarker(location, map) {
+    if(currentMarker){
+      currentMarker.setMap(null);
+    }
+    // Add the marker at the clicked location, and add the next-available label
+    // from the array of alphabetical characters.
+    currentMarker = new google.maps.Marker({
+      position: location,
+      map: map,
+      draggable:true
+
+    });
+
+    console.log(location.toJSON());
+
+    if(obj){
+      var mLocation = location.toJSON();
+      obj.value = mLocation.lat+","+mLocation.lng;
+      //$('#pickLocationModal').modal('hide');
+      
+    }
+  }
+
+      
+
+
+    }
+  </script>
+
+  <!-- Google map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASoSGvmJE4yIFaP4K0ijV-hpemGBevikw&callback=loadMap"></script>
 
 </body>
 

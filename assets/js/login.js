@@ -9,14 +9,31 @@
             let password = $('#yourPassword').val();
 
             if(!username){
-                alert('Please enter username');
+        
+                $('#feed-back').html(`
+                 <div class="alert alert-warning">
+                     <p><i class="fa fa-times"></i> Please enter username</p>
+                 </div>
+                
+                `);
                 return;
             }
 
             if(!password){
-                alert('Please enter password');
+                $('#feed-back').html(`
+                <div class="alert alert-warning">
+                    <p><i class="fa fa-times"></i> Please enter password</p>
+                </div>
+               
+               `);
                 return;
             }
+
+            $('#feed-back').html(`
+            <div class="alert alert-warning">
+                <p><i class="fa fa-hourglass"></i> Please wait as we log you in...</p>
+            </div>                           
+           `);
 
             $.ajax({
                 url:'ajax/login.php',
@@ -30,19 +47,38 @@
                 success:(resp)=>{
                     if(resp){
                         if(resp.status =="success"){
-                            alert('Logged in successfully');
+                            $('#feed-back').html(`
+                                <div class="alert alert-success">
+                                    <p><i class="fa fa-check"></i> Logged In Successfully!</p>
+                                </div>                           
+                            `);
                             window.location="index.php";
                         }
                         else{
-                            alert('Invalid username or password');
+                            $('#feed-back').html(`
+                            <div class="alert alert-warning">
+                                <p> <i class="fa fa-times"></i> Invalid username or password</p>
+                            </div>                           
+                           `);
+                  
                         }
                     }
                     else{
-                        alert('Invalid username or password');
+                       
+                        $('#feed-back').html(`
+                        <div class="alert alert-warning">
+                            <p><i class="fa fa-times"></i> Invalid username or password</p>
+                        </div>                           
+                       `);
                     }
                 },
                 error:(resp)=>{
-                    alert('Sorry, an error occurred');
+                   
+                    $('#feed-back').html(`
+                    <div class="alert alert-danger">
+                        <p><i class="fa fa-times"></i> Sorry, an error occurred. Try again later.</p>
+                    </div>                           
+                   `);
                 }
             });
         })

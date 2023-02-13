@@ -8,8 +8,15 @@ class Manufacturer extends user{
         $query = Database::getConnection()->query($sql);
         if($query){
             while($row=$query->fetch_assoc()){
-               $user = $this->extractUser($row);
-               $users[]=$user;
+                $mUser= new User;
+                $mUser->setId($row['ID']);
+                $mUser->setName($row['Name']);
+                $mUser->setAddress($row['Address']);
+                $mUser->setEmail($row['Email']);
+                $mUser->setUsername($row['Username']);
+                $mUser->setPassword($row['Password']);
+                $mUser->setUserTypeId($row['User_Type_ID']);
+               $users[]=$mUser;
             }
         }
       

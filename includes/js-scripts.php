@@ -9,5 +9,6 @@
   <script src="assets/vendor/jquery/jquery-3.6.3.min.js"></script>
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/medicines.js"></script>
+  <script src="assets/js/medicine.js"></script>
+  <script src="assets/js/saleNotification.js"></script>
   <script src="assets/js/logout.js"></script>
