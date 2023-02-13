@@ -1,6 +1,6 @@
 <?php
  include('../classes/database.php');
- include('../classes/salenotificationmedicine'.php);
+ include('../classes/salenotificationmedicine.php');
 
 $id= trim(filter_var($_POST['id'],FILTER_SANITIZE_STRING));
 $saleNotificationId= trim(filter_var($_POST['saleNotificationId'],FILTER_SANITIZE_STRING));
@@ -19,6 +19,10 @@ try{
         )
         ));
       }
+    
+
+
+
     exit(json_encode(
         array(
             "status"=>"success",

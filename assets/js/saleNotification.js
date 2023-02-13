@@ -32,6 +32,36 @@ let submitForm = (e)=>{
         return;
     }
 
+    if(!window.selectedMedicines){
+        alert('Please select the medicine that was sold');
+        return;
+    }
+
+    if(window.selectedMedicines.length == 0){
+        alert('Please select the medicine that was sold');
+        return;
+    }
+
+    //loop through each medicines and append amounts
+    let missing = 0;
+    window.selectedMedicines.forEach((elem,index)=>{
+
+        let div = `#med_${elem.id}`;
+        let amount = $(div).val().trim();
+        if(amount == null || amount == ""){
+            alert('Please enter an amount for '+elem.name);
+            missing+=1;
+        }
+
+        window.selectedMedicines[index].amount = amount;
+
+    });
+
+    if(missing>0){
+        return;
+    }
+
+
   $.ajax({
       url:"ajax/save-salenotification.php",
       type:"post",
@@ -42,6 +72,7 @@ let submitForm = (e)=>{
           buyerId:buyerId,
           sellerId:sellerId,
           location:location,
+          medicines:window.selectedMedicines
       },
       success:(resp)=>{
           if(resp && resp.status=="status"){

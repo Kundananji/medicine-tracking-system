@@ -38,6 +38,8 @@ let Medicine = (function ($) {
                         </th>
                         <th>
                         </th>
+                        <th>
+                        </th>
                      </tr>
                    </thead>
                    <tbody>
@@ -64,6 +66,9 @@ let Medicine = (function ($) {
                          ${medicine.manufacturer.name}
                         </td>
                         <td>
+                        <input type="text" class="form-control" value="" id="med_${medicine.id}" placeholder="Enter Amount"/>
+                       </td>
+                        <td>
                           <a href="javascript:void(0)" onclick="Medicine.removeMedicine(${medicine.id})"> <i class="bi bi-trash"></i> Remove</a>
                         </td>
                     </tr>`;
@@ -83,24 +88,33 @@ let Medicine = (function ($) {
  let addSelected =()=>{
    let oForm = document.getElementById('form-add-notification');
    let elements = oForm.elements;
+   let selected = [];
    for(let i=0; i<elements.length; i++){
       var elem = elements[i];
        console.log(elem);
        if(elem.type=="checkbox" && elem.name =="medicines[]"){
-         if(! window.selectedMedicines){
+         if(!window.selectedMedicines){
             window.selectedMedicines = [];
          }
 
          window.medicines.forEach((med)=>{
             if(med.id == elem.value){
-                window.selectedMedicines.push(med);  
+                //create array with records that already exist with this id
+               var medsFound = window.selectedMedicines.filter(function (el)
+                    {
+                    return el.id == med.id ;
+                    }
+                );
+                if(medsFound.length == 0){ //only add if no meds already exist
+                  window.selectedMedicines.push(med);  
+                }
             }
          })
          
        }
    }
    //hide search
-   $('#added-medicines').html('');
+   $('#medicines-found').html('');
    displaySelected();
  }
 
@@ -147,12 +161,9 @@ let Medicine = (function ($) {
                    <tbody>
                    
                    `;
-
+                   window.medicines = []; //reset medicines
                    data.medicines.forEach((medicine)=>{
-                    if(!window.medicines){
-                        window.medicines = [];
-                     }
-                     window.medicines.push(medicine);
+                    window.medicines.push(medicine);
                     output+=` 
                     <tr>
                         <td>
