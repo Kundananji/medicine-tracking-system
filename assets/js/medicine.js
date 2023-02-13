@@ -17,8 +17,8 @@ let Medicine = (function ($) {
 
  let displaySelected = () =>{
     let output =`
-             
-                 <table class="table table-bordered">
+                <h6>Added Medicines</h6>
+                 <table class="table table-bordered table-striped">
                    <thead>
                      <tr>
                         <th>
@@ -99,6 +99,8 @@ let Medicine = (function ($) {
          
        }
    }
+   //hide search
+   $('#added-medicines').html('');
    displaySelected();
  }
 
