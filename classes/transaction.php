@@ -84,6 +84,74 @@ function saveTransaction($id,$dateOfTransaction,$details,$location,$transactionT
 }//end save function
 
 
+
+//function to create or edit instance of transaction
+/**
+ * @param actors array of actors consising of user Id and role name in format
+ * @param medicines array of medicines
+ * 
+ * 
+ */
+function createTransaction($dateOfTransaction,
+                           $details,
+                           $location,
+                           $transactionTypeName, 
+                           $actors,
+                           $medicines){
+    try{
+
+        //create transaction first
+        $id=0;
+        $trasactionType = new TypeOfTransaction();
+        $mTransactionType = $trasactionType->getByName($transactionTypeName);
+
+        if($mTransactionType==null){
+            throw new Exception("Could not find Transaction Type");
+        }
+
+        $createdTransaction = $this->saveTransaction($id,$dateOfTransaction,$details,$location,$mTransactionType->getId());
+        
+        if($createdTransaction==null){
+          throw new Exception("Failed to create Transaction");
+        }
+
+        $transactionActor = new TransactionActor();
+        
+        //register actors
+        foreach($actors as $actor){
+            $transactionRole = new TransactionRole();
+
+            $mTransactionRole = $transactionRole->getTransactionRoleByName($actor['roleName']);
+            if($mTransactionRole == null){
+                throw new Exception("Transaction Role not found");
+            }
+
+            $savedTransactionActor = $transactionActor->saveTransactionActor($id,$actor['userId'] ,$mTransactionRole->getId(),$createdTransaction->getId());
+
+            if($savedTransactionActor == null){
+                throw new Exception("Failed to save transaction actor");
+            }
+        }
+
+        //register medicines
+        $transactionMedicine = new TransactionMedicine();
+        foreach($medicines as $medicine){
+            $savedTransactionMedicine = $transactionMedicine->saveTransactionMedicine(0,$createdTransaction->getId(),$medicine['medicineId'],$medicine['details'],$medicine['quantity'],$medicine['amount']);
+            if($savedTransactionMedicine == null){
+                throw new Exception("Failed to save transaction medicine");
+            }
+
+        }
+
+
+
+    }catch(Exception $exception){
+        throw $exception;
+    }
+}//end save function
+
+
+
     function getId(){
           return $this->id;
       }

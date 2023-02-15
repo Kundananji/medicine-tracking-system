@@ -48,7 +48,7 @@ function getAllRecords(){
                     $mSaleNotification= new SaleNotification;
                     $mSaleNotification->setId($row['ID']);
                     $mSaleNotification->setDateOfSale($row['Date_Of_Sale']);
-                    $mSaleNotification->setBuyerId($row['Buyer_ID ']);
+                    $mSaleNotification->setBuyerId($row['Buyer_ID']);
                     $mSaleNotification->setSellerId($row['Seller_ID']);
                     $mSaleNotification->setLocation($row['Location']);
                     $records[]=$mSaleNotification;

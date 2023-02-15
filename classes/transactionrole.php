@@ -27,6 +27,37 @@ function __construct($id=null){
     }//end constructor
 
 
+
+
+    /**
+* Function to fetch transactionrole object having the name passed
+* @param name : name of transactionRole to find 
+* @return TransactionRole 
+* Function to fetch all records 
+**/
+function getTransactionRoleByName($name){
+    $mTransactionRole=null;
+        try{
+            $sql="SELECT * FROM transaction_role WHERE name='$name'";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->execute();
+            $query = $stmt->get_result();
+            if($query){
+                while($row=$query->fetch_assoc()){
+                    $mTransactionRole= new TransactionRole;
+                    $mTransactionRole->setId($row['ID']);
+                    $mTransactionRole->setName ($row['Name']);
+                    $mTransactionRole->setDescription($row['Description']);
+                  
+                }//end while
+            }//end query check
+          }catch(Exception $exception){
+            throw $exception;
+          }//end catch
+        return $mTransactionRole;
+    }//end getTransactionRole By Name function
+
+
 /**
 * Function to fetch all records 
 * @return array of fetched records 

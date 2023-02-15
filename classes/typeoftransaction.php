@@ -27,6 +27,35 @@ function __construct($id=null){
     }//end constructor
 
 
+
+/**
+* Function to fetch transaction by name
+* @return transactionType 
+* Function to fetch all records 
+**/
+function getByName($name){
+    $mTypeOfTransaction=null;
+        try{
+            $sql="SELECT * FROM type_of_transaction WHERE `Name`='$name'";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->execute();
+            $query = $stmt->get_result();
+            if($query){
+                while($row=$query->fetch_assoc()){
+                    $mTypeOfTransaction= new TypeOfTransaction;
+                    $mTypeOfTransaction->setId($row['ID']);
+                    $mTypeOfTransaction->setName ($row['Name']);
+                    $mTypeOfTransaction->setDescription($row['Description']);
+         
+                }//end while
+            }//end query check
+          }catch(Exception $exception){
+            throw $exception;
+          }//end catch
+        return $mTypeOfTransaction;
+}//end get by name function    
+
+
 /**
 * Function to fetch all records 
 * @return array of fetched records 
@@ -52,7 +81,7 @@ function getAllRecords(){
             throw $exception;
           }//end catch
         return $records;
-    }//end getAllRecords function
+}//end getAllRecords function
 
 //function to create or edit instance of typeOfTransaction
 function saveTypeOfTransaction($id,$name ,$description){

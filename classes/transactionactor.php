@@ -3,6 +3,7 @@ class TransactionActor{
   private $id;
   private $userId ;
   private $transactionRoleId;
+  private $transactionId;
 
 //Constructor function, creates a new instance of transactionActor; 
 function __construct($id=null){
@@ -18,6 +19,7 @@ function __construct($id=null){
                     $this->setId($row['ID']);
                     $this->setUserId ($row['User_ID']);
                     $this->setTransactionRoleId($row['Transaction_Role_ID']);
+                    $this->setTransactionId($row['Transaction_ID']);
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -45,6 +47,7 @@ function getAllRecords(){
                     $mTransactionActor->setId($row['ID']);
                     $mTransactionActor->setUserId ($row['User_ID']);
                     $mTransactionActor->setTransactionRoleId($row['Transaction_Role_ID']);
+                    $mTransactionActor->setTransactionId($row['Transaction_ID']);
                     $records[]=$mTransactionActor;
                 }//end while
             }//end query check
@@ -55,17 +58,17 @@ function getAllRecords(){
     }//end getAllRecords function
 
 //function to create or edit instance of transactionActor
-function saveTransactionActor($id,$userId ,$transactionRoleId){
+function saveTransactionActor($id,$userId ,$transactionRoleId,$transactionId){
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `transaction_actor`(`ID`,`User_ID`,`Transaction_Role_ID`) VALUES(?,?,?)";
+            $sql="INSERT INTO `transaction_actor`(`ID`,`User_ID`,`Transaction_Role_ID`,`Transaction_ID`) VALUES(?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("iii",$id,$userId ,$transactionRoleId);
+            $stmt->bind_param("iiii",$id,$userId ,$transactionRoleId,$transactionId);
         }else{
-            $sql="UPDATE `transaction_actor` SET `User_ID`=?,`Transaction_Role_ID`=? WHERE ID=?";
+            $sql="UPDATE `transaction_actor` SET `User_ID`=?,`Transaction_Role_ID`=?,`Transaction_ID`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("iii",$userId ,$transactionRoleId,$id);
+            $stmt->bind_param("iiii",$userId ,$transactionRoleId,$transactionId,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -98,6 +101,14 @@ function saveTransactionActor($id,$userId ,$transactionRoleId){
           return new TransactionRole($this->transactionRoleId);
       }
 
+    function getTransactionId(){
+          return $this->transactionId;
+      }
+
+    function getTransaction(){
+          return new Transaction($this->transactionId);
+      }
+
 
     function setId($id){
           $this->id=$id;
@@ -111,6 +122,11 @@ function saveTransactionActor($id,$userId ,$transactionRoleId){
 
     function setTransactionRoleId($transactionRoleId){
           $this->transactionRoleId=$transactionRoleId;
+      }
+
+
+    function setTransactionId($transactionId){
+          $this->transactionId=$transactionId;
       }
 
 

@@ -1,60 +1,184 @@
 <?php
- include('../classes/database.php');
- include('../classes/salenotification.php'); 
- include('../classes/salenotificationmedicine.php');
+include('../classes/database.php');
+include('../classes/salenotification.php');
+include('../classes/salenotificationmedicine.php');
+include('../classes/transaction.php');
+include('../classes/transactionactor.php');
+include('../classes/transactionmedicine.php');
+include('../classes/transactionrole.php');
+include('../classes/typeoftransaction.php');
 
-$id= trim(filter_var($_POST['id'],FILTER_SANITIZE_STRING));
-$dateOfSale= trim(filter_var($_POST['dateOfSale'],FILTER_SANITIZE_STRING));
-$buyerId= trim(filter_var($_POST['buyerId'],FILTER_SANITIZE_STRING));
-$sellerId= trim(filter_var($_POST['sellerId'],FILTER_SANITIZE_STRING));
-$location= trim(filter_var($_POST['location'],FILTER_SANITIZE_STRING));
+$id = trim(htmlspecialchars($_POST['id']));
+$dateOfSale = trim(htmlspecialchars($_POST['dateOfSale']));
+$buyerId = trim(htmlspecialchars($_POST['buyerId']));
+$sellerId = trim(htmlspecialchars($_POST['sellerId']));
+$location = trim(htmlspecialchars($_POST['location']));
 $medicines = $_POST['medicines'];
 
-print_r($_POST);
+//to do: add validation
+if(empty($dateOfSale)){
+  exit(json_encode(
+    array(
+      "status" => "failed",
+      "message" => "Date of Sale is missing"
+    )
+  ));
+}
+
+if(empty($buyerId)){
+  exit(json_encode(
+    array(
+      "status" => "failed",
+      "message" => "Buyer is missing"
+    )
+  ));
+}
+
+if(empty($sellerId)){
+  exit(json_encode(
+    array(
+      "status" => "failed",
+      "message" => "Seller is missing"
+    )
+  ));
+}
+
+if(empty($location)){
+  exit(json_encode(
+    array(
+      "status" => "failed",
+      "message" => "Location is missing"
+    )
+  ));
+}
+
+if(sizeof($medicines)==0){
+  exit(json_encode(
+    array(
+      "status" => "failed",
+      "message" => "Medicines are missing"
+    )
+  ));
+}
 
 $saleNotification = new SaleNotification();
-try{
-    $savedSaleNotification = $saleNotification->saveSaleNotification($id,$dateOfSale,$buyerId,$sellerId,$location);
-    if($savedSaleNotification == null){
-        exit(json_encode( 
-            array(
-            "status"=>"failed",
-            "message"=>"Failed to add Sale&nbsp;Notification"
-        )
-        ));
-      }
-   $saleNotificationMedicine = new SaleNotificationMedicine();
-   foreach($medicines as $medicine){
+try {
+  //begin transaction
+  Database::getConnection()->query("START TRANSACTION;");
+  $savedSaleNotification = $saleNotification->saveSaleNotification($id, $dateOfSale, $buyerId, $sellerId, $location);
+  if ($savedSaleNotification == null) {
 
-
-      $id= trim(filter_var($medicine['id'],FILTER_SANITIZE_STRING));
-      $saleNotificationId= trim(filter_var($medicine['saleNotificationId'],FILTER_SANITIZE_STRING));
-      $medicineId= trim(filter_var($medicine['medicineId'],FILTER_SANITIZE_STRING));
-      $quantity= trim(filter_var($medicine['quantity'],FILTER_SANITIZE_STRING));
-      $amount= trim(filter_var($medicine['amount'],FILTER_SANITIZE_STRING));
-
-
-      $saleNotificationMedicine->saveSaleNotificationMedicine($id,$saleNotificationId,$medicineId,$quantity,$amount);
-      if($savedSaleNotificationMedicine == null){
-        //failed to save
-      }
-   }
-
-
-
+    //roll back whatever has been done
+    Database::getConnection()->query("ROLLBACK;");
     exit(json_encode(
-        array(
-            "status"=>"success",
-            "message"=>"Sale&nbsp;Notification added successfully"
-         )
+      array(
+        "status" => "failed",
+        "message" => "Failed to add Sale Notification"
+      )
     ));
-}
-catch(Exception $ex){
-  print_r($ex);
-exit(json_encode(
-  array(
-  "status"=>"failed",
-  "message"=>"Failed to add Sale&nbsp;Notification"
-)
-));
+  }
+
+  $saleNotificationMedicine = new SaleNotificationMedicine();
+
+  $failed = 0;
+  foreach ($medicines as $medicine) {
+
+    $id = 0;
+    
+    $saleNotificationId = $savedSaleNotification->getId();
+      
+    $medicineId = trim(htmlspecialchars($medicine['id']));
+    
+    if($medicineId==null){
+     //roll back whatever has been done
+      Database::getConnection()->query("ROLLBACK;");
+        exit(json_encode(
+          array(
+            "status" => "failed",
+            "message" => "Medicine Id is missing"
+          )
+        ));
+    };
+
+    $quantity = 1;    
+    
+    if(isset($medicine['quantity'])){
+      $quantity = trim(htmlspecialchars($medicine['quantity']));
+    }
+
+    if($quantity===""){
+      //roll back whatever has been done
+      Database::getConnection()->query("ROLLBACK;");
+         exit(json_encode(
+           array(
+             "status" => "failed",
+             "message" => "Quantity is missing"
+           )
+         ));
+     };
+    $amount = trim(htmlspecialchars($medicine['amount']));
+    if($amount===""){
+      //roll back whatever has been done
+      Database::getConnection()->query("ROLLBACK;");
+         exit(json_encode(
+           array(
+             "status" => "failed",
+             "message" => "Quantity is missing"
+           )
+         ));
+     };
+
+    $savedSaleNotificationMedicine =$saleNotificationMedicine->saveSaleNotificationMedicine($id, $saleNotificationId, $medicineId, $quantity, $amount);
+    if ($savedSaleNotificationMedicine == null) {
+      //failed to save
+      $failed += 1;
+    }
+  }
+
+  if ($failed > 0) {
+
+    //roll back whatever has been done
+    Database::getConnection()->query("ROLLBACK;");
+    exit(json_encode(
+      array(
+        "status" => "failed",
+        "message" => "Failed to add Sale Notification. Some medicines could be be added"
+      )
+    ));
+  }
+
+  //at this point, we can create the transction that will be shared with blockchain network
+  $transactionType="Sale";
+  $dateOfTransaction=date("Y-m-d");
+  $actors = [
+     array($buyerId,"Buyer"),
+     array($sellerId,"Seller"),
+  ];
+
+  $transaction = new Transaction();
+  $transaction->createTransaction($dateOfTransaction,
+                                  $details,
+                                  $location,
+                                  $transactionType, 
+                                  $actors,
+                                  $medicines);
+
+  //commit, everything okay
+  Database::getConnection()->query("COMMIT;");
+
+  exit(json_encode(
+    array(
+      "status" => "success",
+      "message" => "Sale Notification added successfully"
+    )
+  ));
+} catch (Exception $ex) {
+  //roll back whatever has been done
+  Database::getConnection()->query("ROLLBACK;");
+  exit(json_encode(
+    array(
+      "status" => "failed",
+      "message" => "Failed to add Sale Notification"
+    )
+  ));
 }

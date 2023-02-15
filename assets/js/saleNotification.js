@@ -75,7 +75,7 @@ let submitForm = (e)=>{
           medicines:window.selectedMedicines
       },
       success:(resp)=>{
-          if(resp && resp.status=="status"){
+          if(resp && resp.status=="success"){
               viewSaleNotification();
           }else{;
               alert(resp.message);

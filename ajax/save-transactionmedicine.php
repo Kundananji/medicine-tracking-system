@@ -1,6 +1,6 @@
 <?php
  include('../classes/database.php');
- include('../classes/transactionmedicine'.php);
+ include('../classes/transactionmedicine.php');
 
 $id= trim(filter_var($_POST['id'],FILTER_SANITIZE_STRING));
 $transactionId= trim(filter_var($_POST['transactionId'],FILTER_SANITIZE_STRING));
