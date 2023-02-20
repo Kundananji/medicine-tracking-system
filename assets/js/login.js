@@ -12,7 +12,7 @@
         
                 $('#feed-back').html(`
                  <div class="alert alert-warning">
-                     <p><i class="fa fa-times"></i> Please enter username</p>
+                     <p><i class="bi bi-exclamation-triangle"></i> Please enter username</p>
                  </div>
                 
                 `);
@@ -22,7 +22,7 @@
             if(!password){
                 $('#feed-back').html(`
                 <div class="alert alert-warning">
-                    <p><i class="fa fa-times"></i> Please enter password</p>
+                    <p><i class="bi bi-exclamation-triangle"></i> Please enter password</p>
                 </div>
                
                `);
@@ -31,7 +31,7 @@
 
             $('#feed-back').html(`
             <div class="alert alert-warning">
-                <p><i class="fa fa-hourglass"></i> Please wait as we log you in...</p>
+                <p><i class="bi bi-hourglass-split"></i> Please wait as we log you in...</p>
             </div>                           
            `);
 
@@ -49,7 +49,7 @@
                         if(resp.status =="success"){
                             $('#feed-back').html(`
                                 <div class="alert alert-success">
-                                    <p><i class="fa fa-check"></i> Logged In Successfully!</p>
+                                    <p><i class="bi bi-check"></i> Logged In Successfully!</p>
                                 </div>                           
                             `);
                             window.location="index.php";
@@ -57,7 +57,7 @@
                         else{
                             $('#feed-back').html(`
                             <div class="alert alert-warning">
-                                <p> <i class="fa fa-times"></i> Invalid username or password</p>
+                                <p> <i class="bi bi-exclamation-triangle"></i> Invalid username or password</p>
                             </div>                           
                            `);
                   
@@ -67,7 +67,7 @@
                        
                         $('#feed-back').html(`
                         <div class="alert alert-warning">
-                            <p><i class="fa fa-times"></i> Invalid username or password</p>
+                            <p><i class="bi bi-exclamation-triangle"></i> Invalid username or password</p>
                         </div>                           
                        `);
                     }
@@ -76,7 +76,7 @@
                    
                     $('#feed-back').html(`
                     <div class="alert alert-danger">
-                        <p><i class="fa fa-times"></i> Sorry, an error occurred. Try again later.</p>
+                        <p><i class="bi bi-exclamation-triangle"></i> Sorry, an error occurred. Try again later.</p>
                     </div>                           
                    `);
                 }

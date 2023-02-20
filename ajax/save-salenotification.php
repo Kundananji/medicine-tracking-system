@@ -62,6 +62,7 @@ if(sizeof($medicines)==0){
 }
 
 $saleNotification = new SaleNotification();
+Database::getConnection()->query("SET autocommit=0;");
 try {
   //begin transaction
   Database::getConnection()->query("START TRANSACTION;");
@@ -88,6 +89,7 @@ try {
     $saleNotificationId = $savedSaleNotification->getId();
       
     $medicineId = trim(htmlspecialchars($medicine['id']));
+    $medicine['details']="";
     
     if($medicineId==null){
      //roll back whatever has been done

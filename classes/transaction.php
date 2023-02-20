@@ -120,6 +120,9 @@ function createTransaction($dateOfTransaction,
         //register actors
         foreach($actors as $actor){
             $transactionRole = new TransactionRole();
+            $user = new User($actor['userId']);
+
+            $actor['name']=$user->getName();
 
             $mTransactionRole = $transactionRole->getTransactionRoleByName($actor['roleName']);
             if($mTransactionRole == null){
@@ -136,12 +139,24 @@ function createTransaction($dateOfTransaction,
         //register medicines
         $transactionMedicine = new TransactionMedicine();
         foreach($medicines as $medicine){
-            $savedTransactionMedicine = $transactionMedicine->saveTransactionMedicine(0,$createdTransaction->getId(),$medicine['medicineId'],$medicine['details'],$medicine['quantity'],$medicine['amount']);
+            $savedTransactionMedicine = $transactionMedicine->saveTransactionMedicine(0,$createdTransaction->getId(),$medicine['id'],$medicine['details'],$medicine['quantity'],$medicine['amount']);
             if($savedTransactionMedicine == null){
                 throw new Exception("Failed to save transaction medicine");
             }
 
         }
+
+        //send to blockchain network
+        //create block: this will be transmitted to every blockchain user
+        $block = array(
+            "transactionId"=>$id,
+            "dateOfTransaction"=>$dateOfTransaction,
+            "details"=>$details,
+            "location"=>$location,
+            "transactionType"=>$transactionTypeName,
+            "actors"=>$actors,
+            "medicines"=>$medicines
+        );
 
 
 
