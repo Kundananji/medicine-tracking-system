@@ -1,5 +1,6 @@
 <?php
 include('../classes/database.php');
+include('../classes/user.php');
 include('../classes/salenotification.php');
 include('../classes/salenotificationmedicine.php');
 include('../classes/transaction.php');
@@ -7,6 +8,7 @@ include('../classes/transactionactor.php');
 include('../classes/transactionmedicine.php');
 include('../classes/transactionrole.php');
 include('../classes/typeoftransaction.php');
+include('../classes/blockchain.php');
 
 $id = trim(htmlspecialchars($_POST['id']));
 $dateOfSale = trim(htmlspecialchars($_POST['dateOfSale']));
@@ -137,6 +139,8 @@ try {
     }
   }
 
+  print_r($medicines);
+
   if ($failed > 0) {
 
     //roll back whatever has been done
@@ -153,9 +157,11 @@ try {
   $transactionType="Sale";
   $dateOfTransaction=date("Y-m-d");
   $actors = [
-     array($buyerId,"Buyer"),
-     array($sellerId,"Seller"),
+     array("userId"=>$buyerId,"roleName"=>"Buyer"),
+     array("userId"=>$sellerId,"roleName"=>"Seller"),
   ];
+
+  $details="Sale of Medicine";
 
   $transaction = new Transaction();
   $transaction->createTransaction($dateOfTransaction,
@@ -175,6 +181,7 @@ try {
     )
   ));
 } catch (Exception $ex) {
+  print_r($ex);
   //roll back whatever has been done
   Database::getConnection()->query("ROLLBACK;");
   exit(json_encode(

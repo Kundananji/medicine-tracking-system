@@ -118,7 +118,7 @@ $mUserType=$userType->getUserByTypeId();
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Pick Location From Map</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -130,7 +130,7 @@ $mUserType=$userType->getUserByTypeId();
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" type="button" data-dismiss="modal">Place Location</button> <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
  
         </div>
       </div>
@@ -178,12 +178,10 @@ $mUserType=$userType->getUserByTypeId();
     if(currentMarker){
       currentMarker.setMap(null);
     }
-    // Add the marker at the clicked location, and add the next-available label
-    // from the array of alphabetical characters.
+    // Add the marker at the clicked location
     currentMarker = new google.maps.Marker({
       position: location,
       map: map,
-      draggable:true
 
     });
 
