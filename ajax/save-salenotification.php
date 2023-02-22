@@ -9,6 +9,7 @@ include('../classes/transactionmedicine.php');
 include('../classes/transactionrole.php');
 include('../classes/typeoftransaction.php');
 include('../classes/blockchain.php');
+include('../classes/block.php');
 
 $id = trim(htmlspecialchars($_POST['id']));
 $dateOfSale = trim(htmlspecialchars($_POST['dateOfSale']));
@@ -84,14 +85,14 @@ try {
   $saleNotificationMedicine = new SaleNotificationMedicine();
 
   $failed = 0;
-  foreach ($medicines as $medicine) {
-
+  for ($i = 0 ; $i< sizeof($medicines); $i++ ) {
+    $medicine = $medicines[$i];
     $id = 0;
     
     $saleNotificationId = $savedSaleNotification->getId();
       
     $medicineId = trim(htmlspecialchars($medicine['id']));
-    $medicine['details']="";
+    $medicine['details']="medicine details";
     
     if($medicineId==null){
      //roll back whatever has been done
@@ -104,10 +105,14 @@ try {
         ));
     };
 
-    $quantity = 1;    
+    $quantity = 1;  
+    //to: update medicine quantity if necessary  
     
     if(isset($medicine['quantity'])){
       $quantity = trim(htmlspecialchars($medicine['quantity']));
+    }
+    else{
+      $medicine['quantity']=$quantity;
     }
 
     if($quantity===""){
@@ -137,9 +142,10 @@ try {
       //failed to save
       $failed += 1;
     }
+    $medicines[$i]=$medicine; //update medicine on array
   }
 
-  print_r($medicines);
+ // print_r($medicines);
 
   if ($failed > 0) {
 

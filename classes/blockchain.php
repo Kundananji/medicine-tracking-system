@@ -12,18 +12,23 @@ class Blockchain implements JsonSerializable{
         }
         $path ="$rootPath/blockchain.json";
         $handle= fopen($path,"a+");
-        $this->chain = json_decode(fread($handle,filesize($path)));
+        $fileSize = filesize($path)==0?1024:filesize($path);
+        $data = json_decode(fread($handle,$fileSize));
+        if($data == null){
+            $this->chain = [];//empty array
+        }
+        $this->chain = $data;
         fclose($handle);
 
         $this->difficulty = 5;
     }
 
     public function getLatestBlock() {
-        return $this->chain[count($this->chain) - 1];
+        return sizeof($this->chain)>0?$this->chain[count($this->chain) - 1]:null;
     }
 
     public function addBlock($newBlock) {
-        $newBlock->previousHash = $this->getLatestBlock()->hash;
+        $newBlock->previousHash = $this->getLatestBlock()!=null? $this->getLatestBlock()->hash:null;
         $newBlock->mineBlock($this->difficulty);
         $index = $this->chain == null?0:sizeof($this->chain);
         $newBlock->index = $index; //get last index of transaction
@@ -35,7 +40,7 @@ class Blockchain implements JsonSerializable{
             mkdir($rootPath);
         }
         $path ="$rootPath/blockchain.json";
-        $handle= fopen($path,"a+");
+        $handle= fopen($path,"w+");
         fwrite($handle,json_encode($this->chain));
         fclose($handle);
     }

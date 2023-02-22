@@ -141,8 +141,8 @@ function createTransaction($dateOfTransaction,
 
         //register medicines
         $transactionMedicine = new TransactionMedicine();
-        foreach($medicines as $medicine){
-       
+        for ($i = 0 ; $i< sizeof($medicines); $i++ ) {
+            $medicine = $medicines[$i];       
             $savedTransactionMedicine = $transactionMedicine->saveTransactionMedicine(0,$createdTransaction->getId(),$medicine['id'],$medicine['details'],$medicine['quantity'],$medicine['amount']);
             if($savedTransactionMedicine == null){
                 throw new Exception("Failed to save transaction medicine");
@@ -164,7 +164,7 @@ function createTransaction($dateOfTransaction,
 
         //add transaction to local block
         $blockchain = new Blockchain();
-        $blockchain->addBlock(new Block(1, time(), json_encode($block)));
+        $blockchain->addBlock(new Block( time(), json_encode($block)));
 
 
         //to do: transasmit transaction to block
