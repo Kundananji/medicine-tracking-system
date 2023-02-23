@@ -17,14 +17,16 @@ class Blockchain implements JsonSerializable{
         if($data == null){
             $this->chain = [];//empty array
         }
-        $this->chain = $data;
+        else{
+         $this->chain = $data;
+        }
         fclose($handle);
 
         $this->difficulty = 5;
     }
 
     public function getLatestBlock() {
-        return sizeof($this->chain)>0?$this->chain[count($this->chain) - 1]:null;
+        return $this->chain!=null &&sizeof($this->chain)>0?$this->chain[count($this->chain) - 1]:null;
     }
 
     public function addBlock($newBlock) {
