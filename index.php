@@ -1,14 +1,14 @@
 <?php
 session_start();
-if(!isset($_SESSION['userId'])) header('location:login.php');
-$name= $_SESSION['name'];
+if (!isset($_SESSION['userId'])) header('location:login.php');
+$name = $_SESSION['name'];
 $userId =  $_SESSION['userId'];
 $userTypeId = $_SESSION['userTypeId'];
 
 include('classes/database.php');
 include('classes/user-type.php');
 $userType = new userType($userTypeId);
-$mUserType=$userType->getUserByTypeId();
+$mUserType = $userType->getUserByTypeId();
 
 
 ?>
@@ -38,37 +38,39 @@ $mUserType=$userType->getUserByTypeId();
   <link href="assets/css/style.css" rel="stylesheet">
 
   <style>
-        #map {
-            width: 100%;
-            height: 600px;
-            background-color: grey;
-        }
-        .full-screen-modal{
-          position: fixed!important;
-          top: 0!important;
-          right: 0!important;
-          bottom: 0!important;
-          left: 0!important;
-          overflow: hidden!important;
-          width: 100%!important;
-          height: 100%!important;
-        }
-        .full-screen-modal-dialog {
-          width: 100%!important;
-          height: 100%!important;
-          margin: 0!important;
-          padding: 0!important;
-          max-width:100%!important;
-        }
+    #map {
+      width: 100%;
+      height: 600px;
+      background-color: grey;
+    }
 
-        .full-screen-modal-content {
-          height: auto!important;
-          min-height: 100%!important;
-          border-radius: 0!important;
-          width: 100%!important;
-        
-        }
-    </style>
+    .full-screen-modal {
+      position: fixed !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      overflow: hidden !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .full-screen-modal-dialog {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+
+    .full-screen-modal-content {
+      height: auto !important;
+      min-height: 100% !important;
+      border-radius: 0 !important;
+      width: 100% !important;
+
+    }
+  </style>
 
   <!-- =======================================================
   * Template Name: NiceAdmin - v2.5.0
@@ -81,10 +83,10 @@ $mUserType=$userType->getUserByTypeId();
 <body>
 
   <!-- ======= Header ======= -->
- <?php include('includes/header.php') ?>
+  <?php include('includes/header.php') ?>
 
   <!-- ======= Sidebar ======= -->
-  <?php include('includes/side-bar.php')?>
+  <?php include('includes/side-bar.php') ?>
 
   <main id="main" class="main">
 
@@ -100,16 +102,38 @@ $mUserType=$userType->getUserByTypeId();
 
     <section class="section dashboard">
       <div class="row">
-         <div class="col table-responsive" id="page-content">
-            <p>Welcome to the Medicine Tracking System. A system that allows you track medicne through the medical supply chain from the manufacturer to the customer.</p>
-         </div>
+        <div class="col table-responsive" id="page-content">
+          <p>Welcome to the Medicine Tracking System. A system that allows you track medicne through the medical supply chain from the manufacturer to the customer.</p>
+        </div>
       </div>
     </section>
 
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  <?php include('includes/footer.php');?>
+  <?php include('includes/footer.php'); ?>
+
+
+  <!-- modal: show content -->
+  <div class="modal fade" id="showContentModal" aria-labelledby="showContentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="showContentModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="show-content-modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
   <!-- modal: pick location -->
@@ -118,11 +142,12 @@ $mUserType=$userType->getUserByTypeId();
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Pick Location From Map</h5>
-           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
+          <div id="alerting-area"></div>
           <div id="googleMap" style="width:100%;height:400px;">
 
           </div>
@@ -130,8 +155,8 @@ $mUserType=$userType->getUserByTypeId();
 
         </div>
         <div class="modal-footer">
-        <button class="btn btn-primary" type="button" data-dismiss="modal">Place Location</button> <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
- 
+          <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Okay</button>
+
         </div>
       </div>
     </div>
@@ -143,59 +168,72 @@ $mUserType=$userType->getUserByTypeId();
   <?php include('includes/js-scripts.php') ?>
 
   <script>
-    let pickLocation = (obj)=>{
-       $('#pickLocationModal').modal('show');
-       loadMap(obj);
+    let showLocation = (location) => {
+      $('#pickLocationModal').modal('show');
+      $('#alerting-area').html('');
+      loadMap(null, location);
     }
 
-    let loadMap = (obj) =>{
+
+    let pickLocation = (obj) => {
+      $('#pickLocationModal').modal('show');
+      $('#alerting-area').html(`<div class="alert alert-info">Click on Map to Pick Locaton</div>`);
+      loadMap(obj);
+    }
+
+    let loadMap = (obj, mLocation) => {
 
       //initialize map to lusaka
 
       let currentPosition = new google.maps.LatLng(-15.416667, 28.283333);
+      if (mLocation) {
+        let locationParts = mLocation.split(",");
+        currentPosition = new google.maps.LatLng(locationParts[0], locationParts[1]);
+      }
 
-      var mapProp= {
-        center:currentPosition,
-        zoom:8,
+      var mapProp = {
+        center: currentPosition,
+        zoom: 8,
       };
 
-      var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-      
+      var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
       currentMarker = null;
 
-      
-  // This event listener calls addMarker() when the map is clicked.
-  google.maps.event.addListener(map, "click", (event) => {
-    addMarker(event.latLng, map);
-  });
+     if(mLocation){ //only listen for location chances if mLocation is not defined
 
-  // Add a marker at the center of the map.
-  addMarker(currentPosition, map);
-
-
-  // Adds a marker to the map.
-  function addMarker(location, map) {
-    if(currentMarker){
-      currentMarker.setMap(null);
+      // This event listener calls addMarker() when the map is clicked.
+      google.maps.event.addListener(map, "click", (event) => {
+        addMarker(event.latLng, map);
+      });
     }
-    // Add the marker at the clicked location
-    currentMarker = new google.maps.Marker({
-      position: location,
-      map: map,
 
-    });
+      // Add a marker at the center of the map.
+      addMarker(currentPosition, map);
 
-    console.log(location.toJSON());
 
-    if(obj){
-      var mLocation = location.toJSON();
-      obj.value = mLocation.lat+","+mLocation.lng;
-      //$('#pickLocationModal').modal('hide');
-      
-    }
-  }
+      // Adds a marker to the map.
+      function addMarker(location, map) {
+        if (currentMarker) {
+          currentMarker.setMap(null);
+        }
+        // Add the marker at the clicked location
+        currentMarker = new google.maps.Marker({
+          position: location,
+          map: map,
 
-      
+        });
+
+
+        if (obj) {
+          var mLocation = location.toJSON();
+          obj.value = mLocation.lat + "," + mLocation.lng;
+          //$('#pickLocationModal').modal('hide');
+
+        }
+      }
+
+
 
 
     }

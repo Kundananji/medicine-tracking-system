@@ -31,6 +31,36 @@ function __construct($id=null){
     }//end constructor
 
 
+
+/**
+* Function to fetch records by sale notification Id
+* @return array of fetched records  
+**/
+function getRecordsBySaleNotificationId($saleNotificationId){
+  $records = [];//empty array of records
+      try{
+          $sql="SELECT * FROM sale_notification_medicine WHERE Sale_Notification_Id=?";
+          $stmt=Database::getConnection()->prepare($sql);
+          $stmt->bind_param("i",$saleNotificationId);
+          $stmt->execute();
+          $query = $stmt->get_result();
+          if($query){
+              while($row=$query->fetch_assoc()){
+                  $mSaleNotificationMedicine= new SaleNotificationMedicine;
+                  $mSaleNotificationMedicine->setId($row['ID']);
+                  $mSaleNotificationMedicine->setSaleNotificationId($row['Sale_Notification_ID']);
+                  $mSaleNotificationMedicine->setMedicineId($row['Medicine_ID']);
+                  $mSaleNotificationMedicine->setQuantity($row['Quantity']);
+                  $mSaleNotificationMedicine->setAmount($row['Amount']);
+                  $records[]=$mSaleNotificationMedicine;
+              }//end while
+          }//end query check
+        }catch(Exception $exception){
+          throw $exception;
+        }//end catch
+      return $records;
+  }//end getAllRecords function
+
 /**
 * Function to fetch all records 
 * @return array of fetched records 

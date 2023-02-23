@@ -11,4 +11,8 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/medicine.js"></script>
   <script src="assets/js/saleNotification.js"></script>
+  <script src="assets/js/saleNotificationMedicine.js"></script>
   <script src="assets/js/logout.js"></script>
+
+  <!-- list pluggin -->
+  <script src="assets/vendor/list/list.min.js"></script>

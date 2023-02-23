@@ -44,7 +44,7 @@ let submitForm = (e)=>{
           amount:amount,
       },
       success:(resp)=>{
-          if(resp && resp.status=="status"){
+          if(resp && resp.status=="success"){
               viewSaleNotificationMedicine();
           }else{;
               alert(resp.message);
@@ -68,12 +68,29 @@ let submitForm = (e)=>{
 
 } //end view function
 
-  let viewSaleNotificationMedicine=()=>{
+  let viewSaleNotificationMedicine=(data)=>{
+     let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+     if(data.saleNotificationId){        
+        $('#show-content-modal-body').html(loader);
+      }
+      else{
+        $('#page-content').html(loader);
+      }
+
+      console.log(data);
+
       $.ajax({
           url:"ajax/view-salenotificationmedicine.php",
           type:"get",
+          data:data,
           success:(resp)=>{
+            if(data.saleNotificationId){
+              $('#showContentModal').modal('show');
+              $('#show-content-modal-body').html(resp);
+            }
+            else{
               $('#page-content').html(resp);
+            }
           }
       })
 

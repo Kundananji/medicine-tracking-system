@@ -18,9 +18,6 @@ if(sizeof($records) == 0){
             <th>
             </th>
             <th>
-                ID
-            </th>
-            <th>
                 Date of Sale
             </th>
             <th>
@@ -44,9 +41,6 @@ if(sizeof($records) == 0){
                <?php echo ++$rowCount;?>
           </td>
           <td>
-              <?php echo $mSaleNotification->getId(); ?> 
-          </td>
-          <td>
               <?php echo $mSaleNotification->getDateOfSale(); ?> 
           </td>
           <td>
@@ -56,7 +50,10 @@ if(sizeof($records) == 0){
               <?php echo $mSaleNotification->getSeller(); ?> 
           </td>
           <td>
-              <?php echo $mSaleNotification->getLocation(); ?> 
+              <a href="javascript:showLocation('<?php echo $mSaleNotification->getLocation(); ?>')"><i class="bi bi-geo-alt-fill"></i> View Location</a>
+          </td>
+          <td>
+              <a href="javascript:SaleNotificationMedicine.viewSaleNotificationMedicine({saleNotificationId: '<?php echo $mSaleNotification->getId(); ?> '})"><i class="bi bi-capsule-pill"></i> View Medicines</a>
           </td>
       </tr>
 <?php

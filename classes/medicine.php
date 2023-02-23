@@ -275,7 +275,7 @@ class Medicine implements \JsonSerializable
    * Function to give a name to an object
    * @return string : name of object
    **/
-  function toString()
+  function __toString()
   {
     $names = [];
     $names[] = $this->name;
