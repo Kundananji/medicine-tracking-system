@@ -10,38 +10,42 @@ public class JavaPeer {
         // create server socket
         ServerSocket serverSocket = new ServerSocket(12345);
 
-        // wait for connection from PHP peer
-        Socket clientSocket = serverSocket.accept();
+        // create array to hold connected client sockets
+        Socket[] clientSockets = new Socket[10];
+        int numClients = 0;
 
-        // create input and output streams for communication
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-        // create scanner for user input
-        Scanner scanner = new Scanner(System.in);
-
-        // create thread for receiving messages from PHP peer
-        Thread receiveThread = new Thread(() -> {
-            try {
-                while (true) {
-                    // read message from PHP peer
-                    String message = in.readLine();
-                    System.out.println("Received message from PHP peer: " + message);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        receiveThread.start();
-
-        // send messages to PHP peer
         while (true) {
-            // read message from user
-            System.out.print("Enter message to send to PHP peer: ");
-            String message = scanner.nextLine();
+            // wait for connection from PHP peer
+            Socket phpSocket = serverSocket.accept();
+            System.out.println("New connection from PHP peer");
 
-            // send message to PHP peer
-            out.println(message);
+            // create input and output streams for communication with PHP peer
+            BufferedReader in = new BufferedReader(new InputStreamReader(phpSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(phpSocket.getOutputStream(), true);
+
+            // create thread for receiving messages from PHP peer
+            Thread receiveThread = new Thread(() -> {
+                try {
+                    while (true) {
+                        // read message from PHP peer
+                        String message = in.readLine();
+                        System.out.println("Received message from PHP peer: " + message);
+
+                        // send message to all connected Java peers
+                        for (int i = 0; i < numClients; i++) {
+                            Socket clientSocket = clientSockets[i];
+                            PrintWriter clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
+                            clientOut.println(message);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            receiveThread.start();
+
+            // add PHP peer socket to array of connected client sockets
+            clientSockets[numClients++] = phpSocket;
         }
     }
 }
