@@ -44,6 +44,39 @@ function __construct($id=null){
 * @return array of fetched records 
 * Function to fetch all records 
 **/
+function getMiners(){
+  $records = [];//empty array of records
+      try{
+          $sql="SELECT * FROM user WHERE User_Type_ID IN(select ID FROM user_type WHERE Name ='Miner')";
+          $stmt=Database::getConnection()->prepare($sql);
+          $stmt->execute();
+          $query = $stmt->get_result();
+          if($query){
+              while($row=$query->fetch_assoc()){
+                  $mUser= new User;
+                  $mUser->setId($row['ID']);
+                  $mUser->setName($row['Name']);
+                  $mUser->setAddress($row['Address']);
+                  $mUser->setEmail($row['Email']);
+                  $mUser->setUsername($row['Username']);
+                  $mUser->setPassword($row['Password']);
+                  $mUser->setUserTypeId($row['User_Type_ID']);
+                  $mUser->setPublicKey($row['Public_Key']);
+                  $mUser->setIpAddress($row['IP_Address']);
+                  $records[]=$mUser;
+              }//end while
+          }//end query check
+        }catch(Exception $exception){
+          throw $exception;
+        }//end catch
+      return $records;
+  }//end getAllRecords function
+
+/**
+* Function to fetch all records 
+* @return array of fetched records 
+* Function to fetch all records 
+**/
 function getAllRecords(){
     $records = [];//empty array of records
         try{

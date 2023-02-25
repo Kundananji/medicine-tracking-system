@@ -6,10 +6,10 @@ class UserType{
   private $canAddMedicine;
   private $canViewMedicine;
   private $canSale;
-  private $canBuy;
   private $canReceive;
   private $canDeliver;
   private $canDispense;
+  private $canMine;
 
 //Constructor function, creates a new instance of userType; 
 function __construct($id=null){
@@ -28,10 +28,10 @@ function __construct($id=null){
                     $this->setCanAddMedicine($row['Can_Add_Medicine']);
                     $this->setCanViewMedicine($row['Can_View_Medicine']);
                     $this->setCanSale($row['Can_Sale']);
-                    $this->setCanBuy($row['Can_Buy']);
                     $this->setCanReceive($row['Can_Receive']);
                     $this->setCanDeliver($row['Can_Deliver']);
                     $this->setCanDispense($row['Can_Dispense']);
+                    $this->setCanMine($row['Can_Mine']);
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -62,10 +62,10 @@ function getAllRecords(){
                     $mUserType->setCanAddMedicine($row['Can_Add_Medicine']);
                     $mUserType->setCanViewMedicine($row['Can_View_Medicine']);
                     $mUserType->setCanSale($row['Can_Sale']);
-                    $mUserType->setCanBuy($row['Can_Buy']);
                     $mUserType->setCanReceive($row['Can_Receive']);
                     $mUserType->setCanDeliver($row['Can_Deliver']);
                     $mUserType->setCanDispense($row['Can_Dispense']);
+                    $mUserType->setCanMine($row['Can_Mine']);
                     $records[]=$mUserType;
                 }//end while
             }//end query check
@@ -76,17 +76,17 @@ function getAllRecords(){
     }//end getAllRecords function
 
 //function to create or edit instance of userType
-function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$canSale,$canBuy,$canReceive,$canDeliver,$canDispense,$canAddMedicine){
+function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$canSale,$canReceive,$canDeliver,$canDispense,$canMine){
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `user_type`(`ID`,`Name`,`Description`,`Can_Add_Medicine`,`Can_View_Medicine`,`Can_Sale`,`Can_Buy`,`Can_Receive`,`Can_Deliver`,`Can_Dispense`) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+            $sql="INSERT INTO `user_type`(`ID`,`Name`,`Description`,`Can_Add_Medicine`,`Can_View_Medicine`,`Can_Sale`,`Can_Receive`,`Can_Deliver`,`Can_Dispense`,`Can_Mine`) VALUES(?,?,?,?,?,?,?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("issiiiiiiii",$id,$name ,$description,$canAddMedicine,$canViewMedicine,$canSale,$canBuy,$canReceive,$canDeliver,$canDispense,$canAddMedicine);
+            $stmt->bind_param("issiiiiiii",$id,$name ,$description,$canAddMedicine,$canViewMedicine,$canSale,$canReceive,$canDeliver,$canDispense,$canMine);
         }else{
-            $sql="UPDATE `user_type` SET `Name`=?,`Description`=?,`Can_Add_Medicine`=?,`Can_View_Medicine`=?,`Can_Sale`=?,`Can_Buy`=?,`Can_Receive`=?,`Can_Deliver`=?,`Can_Dispense`=?,`Can_Add_Medicine`=? WHERE ID=?";
+            $sql="UPDATE `user_type` SET `Name`=?,`Description`=?,`Can_Add_Medicine`=?,`Can_View_Medicine`=?,`Can_Sale`=?,`Can_Receive`=?,`Can_Deliver`=?,`Can_Dispense`=?,`Can_Mine`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("ssiiiiiiiii",$name ,$description,$canAddMedicine,$canViewMedicine,$canSale,$canBuy,$canReceive,$canDeliver,$canDispense,$canAddMedicine,$id);
+            $stmt->bind_param("ssiiiiiiii",$name ,$description,$canAddMedicine,$canViewMedicine,$canSale,$canReceive,$canDeliver,$canDispense,$canMine,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -123,10 +123,6 @@ function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$
           return $this->canSale;
       }
 
-    function getCanBuy(){
-          return $this->canBuy;
-      }
-
     function getCanReceive(){
           return $this->canReceive;
       }
@@ -137,6 +133,10 @@ function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$
 
     function getCanDispense(){
           return $this->canDispense;
+      }
+
+    function getCanMine(){
+          return $this->canMine;
       }
 
 
@@ -170,11 +170,6 @@ function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$
       }
 
 
-    function setCanBuy($canBuy){
-          $this->canBuy=$canBuy;
-      }
-
-
     function setCanReceive($canReceive){
           $this->canReceive=$canReceive;
       }
@@ -187,6 +182,11 @@ function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$
 
     function setCanDispense($canDispense){
           $this->canDispense=$canDispense;
+      }
+
+
+    function setCanMine($canMine){
+          $this->canMine=$canMine;
       }
 
 

@@ -5,6 +5,8 @@ include('../classes/block.php');
 include('../classes/database.php');
 include('../classes/user.php');
 
+$user = new User();
+
 $host = 'localhost';
 $port = 8000;
 
@@ -38,17 +40,27 @@ while (true) {
     fclose($handle);
 
     $blockchain = new Blockchain();
-    if($transaction !=null){    
+    if($transaction !=null){  
+        
+        // broadcast the new transaction to the Java peers to add to their blockchain
+        $data = array(
+            "type"=>"transaction",
+            "data"=>$block
+        );
+        broadcast(json_encode($data));
+
         //add transaction to local block       
         $blockchain->addBlock(new Block( time(), json_encode($transaction)));
 
-        $block = $blockchain->getLatestBlock();
+        $block = $blockchain->getLatestBlock(); 
 
-    
         // broadcast the new block to the Java peers
-        $json_block = json_encode($block); // stringify the new block as JSON
-        broadcast($json_block);
-        
+        $data = array(
+            "type"=>"block",
+            "data"=>$block
+        );
+
+        broadcast(json_encode($data));
         echo "New block added to the blockchain:\n";
         print_r($block);
 
@@ -58,8 +70,16 @@ while (true) {
 }
 
 function broadcast($data) {
-    // broadcast the data to all Java peers
-    $java_peers = array("localhost:9000", "localhost:9001", "localhost:9002");
+    global $user;
+    $miners =  $user->getMiners();
+
+     //fetch java peers from database
+    $java_peers = [];
+    foreach($miners as $miner){
+        $java_peers[]=$miner->getIpAddress();
+    }
+
+    // broadcast the data to all Java peers   
     foreach ($java_peers as $java_peer) {
         $socket = stream_socket_client("tcp://$java_peer", $errno, $errorMessage, 10);
         if ($socket === false) {

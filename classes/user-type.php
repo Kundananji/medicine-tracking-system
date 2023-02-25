@@ -159,7 +159,7 @@ class userType{
  {
   $this->canAddMedicine = $canAddMedicine;
 
-  return $this;
+ 
  }
 
  /**

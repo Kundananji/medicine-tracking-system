@@ -16,6 +16,8 @@
             <div class="col">
                 <form method="post" id="form-add-user" onsubmit="User.submitForm(event);">
                      <input type="hidden" name="id" id="id" value="<?php echo $user->getId();?>"/>
+                     <input type="hidden" name="password" id="password" value="<?php echo $user->getPassword();?>"/>
+                     <input type="hidden" name="userTypeId" id="userTypeId" value="<?php echo $user->getUserTypeId();?>"/>
                     <div class="form-group m-3">
                         <label for="name">Name</label>
                         <input type="text"  id="name" class="form-control" name="name" placeholder="Enter Name" value="<?php echo $user->getName();?>" required/>
@@ -30,7 +32,7 @@
                     </div>
                     <div class="form-group m-3">
                         <label for="username">Username</label>
-                        <textarea  id="username" class="form-control" name="username" placeholder="Enter Username"  required value="<?php echo $user->getUsername();?>"></textarea>
+                        <input type="text"  id="username" class="form-control" name="username" placeholder="Enter Username"  required value="<?php echo $user->getUsername();?>"/>
                     </div>
           <?php
             if(strtolower($user->getUserType()->getName()) =="miner"){
@@ -48,7 +50,8 @@
             }
 
          ?>
-                      <input type="submit" class="btn btn-primary" name="action_submit" value="Submit"/>
+                      <input type="submit" class="btn btn-primary" id="action_submit_button" name="action_submit" value="Submit"/>
+                      <div id="button-loader"></div>
                   </form> <!-- end form-->
            </div> <!-- end column-->
         </div> <!-- end row-->

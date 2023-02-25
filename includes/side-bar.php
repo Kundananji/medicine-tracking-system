@@ -79,7 +79,7 @@
           ?>
        <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#mine-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Mining</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi minecart-loaded"></i><span>Mining</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="mine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
   
