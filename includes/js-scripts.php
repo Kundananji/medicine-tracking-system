@@ -12,6 +12,8 @@
   <script src="assets/js/medicine.js"></script>
   <script src="assets/js/saleNotification.js"></script>
   <script src="assets/js/saleNotificationMedicine.js"></script>
+  <script src="assets/js/user.js"></script>
+  <script src="assets/js/mine.js"></script>
   <script src="assets/js/logout.js"></script>
 
   <!-- list pluggin -->

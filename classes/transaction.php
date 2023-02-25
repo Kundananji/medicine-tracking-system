@@ -162,12 +162,17 @@ function createTransaction($dateOfTransaction,
             "medicines"=>$medicines
         );
 
-        //add transaction to local block
-        $blockchain = new Blockchain();
-        $blockchain->addBlock(new Block( time(), json_encode($block)));
-
-
-        //to do: transasmit transaction to block
+            
+        //write transaction to a flat file for php peer to pick up
+        $rootPath ="../databases";
+        if(!is_dir($rootPath)){
+            mkdir($rootPath);
+        }
+        $path ="$rootPath/currentblockchain.json";
+        $handle= fopen($path,"w");
+        $fileSize = filesize($path)==0?1024:filesize($path);
+        fwrite($handle,json_encode($block));
+        fclose($handle);
 
 
 

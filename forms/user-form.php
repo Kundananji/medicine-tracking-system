@@ -1,49 +1,53 @@
 <?php
+  session_start();
   require("../classes/database.php");
   require("../classes/user.php");
   require("../classes/usertype.php");
+  $userId = $_SESSION['userId'];
+
+  $user = new User($userId);
 ?>
 <div class="card">
     <div class="card-header">
-        <h3>Add User</h3>
+        <h3>Update Account Details</h3>
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col">
                 <form method="post" id="form-add-user" onsubmit="User.submitForm(event);">
-                     <input type="hidden" name="id" id="id" value="0"/>
+                     <input type="hidden" name="id" id="id" value="<?php echo $user->getId();?>"/>
                     <div class="form-group m-3">
                         <label for="name">Name</label>
-                        <input type="text"  id="name" class="form-control" name="name" placeholder="Enter Name"  required/>
+                        <input type="text"  id="name" class="form-control" name="name" placeholder="Enter Name" value="<?php echo $user->getName();?>" required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="address">Address</label>
-                        <textarea  id="address" class="form-control" name="address" placeholder="Enter Address"  required></textarea>
+                        <textarea  id="address" class="form-control" name="address" placeholder="Enter Address"  required value="<?php echo $user->getAddress();?>"></textarea>
                     </div>
                     <div class="form-group m-3">
                         <label for="email">Email</label>
-                        <input type="text"  id="email" class="form-control" name="email" placeholder="Enter Email"  required/>
+                        <input type="text"  id="email" class="form-control" name="email" placeholder="Enter Email"  value="<?php echo $user->getEmail();?>" required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="username">Username</label>
-                        <textarea  id="username" class="form-control" name="username" placeholder="Enter Username"  required></textarea>
+                        <textarea  id="username" class="form-control" name="username" placeholder="Enter Username"  required value="<?php echo $user->getUsername();?>"></textarea>
+                    </div>
+          <?php
+            if(strtolower($user->getUserType()->getName()) =="miner"){
+
+          ?>
+                    <div class="form-group m-3">
+                        <label for="publicKey">Public Key</label>
+                        <textarea  id="publicKey" class="form-control" name="publicKey" placeholder="Enter Public Key"><?php echo $user->getPublicKey();?></textarea>
                     </div>
                     <div class="form-group m-3">
-                        <label for="password">Password</label>
-                        <input type="password"  id="password" class="form-control" name="password" placeholder="Enter Password"  required/>
+                        <label for="ipAddress">IP Address</label>
+                        <input type="text"  id="ipAddress" class="form-control" name="ipAddress" placeholder="Enter IP Address" value="<?php echo $user->getIpAddress();?>" />
                     </div>
-                    <div class="form-group m-3">
-                        <label for="userTypeId">User Type</label>
-                         <select class="form-control" name="userTypeId" id="userTypeId">
-                        <?php
-                            $userType = new UserType;
-                            $records =$userType->getAllRecords();
-                            foreach($records as $mUserType){
-                                 echo'<option value="'.$mUserType->getId().'">'.$mUserType->getName().'</option>';
-                               }
-                         ?>
-                         </select>
-                    </div>
+        <?php
+            }
+
+         ?>
                       <input type="submit" class="btn btn-primary" name="action_submit" value="Submit"/>
                   </form> <!-- end form-->
            </div> <!-- end column-->

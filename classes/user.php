@@ -1,5 +1,5 @@
 <?php
-class User implements \JsonSerializable{
+class User{
   private $id;
   private $name;
   private $address;
@@ -7,6 +7,8 @@ class User implements \JsonSerializable{
   private $username;
   private $password;
   private $userTypeId;
+  private $publicKey;
+  private $ipAddress;
 
 //Constructor function, creates a new instance of user; 
 function __construct($id=null){
@@ -26,6 +28,8 @@ function __construct($id=null){
                     $this->setUsername($row['Username']);
                     $this->setPassword($row['Password']);
                     $this->setUserTypeId($row['User_Type_ID']);
+                    $this->setPublicKey($row['Public_Key']);
+                    $this->setIpAddress($row['IP_Address']);
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -57,6 +61,8 @@ function getAllRecords(){
                     $mUser->setUsername($row['Username']);
                     $mUser->setPassword($row['Password']);
                     $mUser->setUserTypeId($row['User_Type_ID']);
+                    $mUser->setPublicKey($row['Public_Key']);
+                    $mUser->setIpAddress($row['IP_Address']);
                     $records[]=$mUser;
                 }//end while
             }//end query check
@@ -67,17 +73,17 @@ function getAllRecords(){
     }//end getAllRecords function
 
 //function to create or edit instance of user
-function saveUser($id,$name,$address,$email,$username,$password,$userTypeId){
+function saveUser($id,$name,$address,$email,$username,$password,$userTypeId,$publicKey,$ipAddress){
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `user`(`ID`,`Name`,`Address`,`Email`,`Username`,`Password`,`User_Type_ID`) VALUES(?,?,?,?,?,?,?)";
+            $sql="INSERT INTO `user`(`ID`,`Name`,`Address`,`Email`,`Username`,`Password`,`User_Type_ID`,`Public_Key`,`IP_Address`) VALUES(?,?,?,?,?,?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("isssssi",$id,$name,$address,$email,$username,$password,$userTypeId);
+            $stmt->bind_param("isssssiss",$id,$name,$address,$email,$username,$password,$userTypeId,$publicKey,$ipAddress);
         }else{
-            $sql="UPDATE `user` SET `Name`=?,`Address`=?,`Email`=?,`Username`=?,`Password`=?,`User_Type_ID`=? WHERE ID=?";
+            $sql="UPDATE `user` SET `Name`=?,`Address`=?,`Email`=?,`Username`=?,`Password`=?,`User_Type_ID`=?,`Public_Key`=?,`IP_Address`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("sssssii",$name,$address,$email,$username,$password,$userTypeId,$id);
+            $stmt->bind_param("sssssissi",$name,$address,$email,$username,$password,$userTypeId,$publicKey,$ipAddress,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -118,6 +124,18 @@ function saveUser($id,$name,$address,$email,$username,$password,$userTypeId){
           return $this->userTypeId;
       }
 
+    function getUserType(){
+          return new UserType($this->userTypeId);
+      }
+
+    function getPublicKey(){
+          return $this->publicKey;
+      }
+
+    function getIpAddress(){
+          return $this->ipAddress;
+      }
+
 
     function setId($id){
           $this->id=$id;
@@ -154,6 +172,16 @@ function saveUser($id,$name,$address,$email,$username,$password,$userTypeId){
       }
 
 
+    function setPublicKey($publicKey){
+          $this->publicKey=$publicKey;
+      }
+
+
+    function setIpAddress($ipAddress){
+          $this->ipAddress=$ipAddress;
+      }
+
+
       /**
       * Function to give a name to an object
       * @return string : name of object
@@ -163,13 +191,6 @@ function saveUser($id,$name,$address,$email,$username,$password,$userTypeId){
         $names[]=$this->name; 
         return implode(" ",$names);
     }
-
-
-    public function jsonSerialize(){
-      return get_object_vars($this);
-  
-    }
-
 
 
 

@@ -1,7 +1,9 @@
 <?php
 
-require_once('blockchain.php'); // import the blockchain library
-require_once('db.php'); // import the database connection settings
+include('../classes/blockchain.php');
+include('../classes/block.php');
+include('../classes/database.php');
+include('../classes/user.php');
 
 $host = 'localhost';
 $port = 8000;
@@ -22,22 +24,37 @@ while (true) {
     $data = stream_get_contents($client); // read incoming data from client
     $transaction = json_decode($data, true); // decode transaction data from JSON
     
-    // insert the transaction into the database
-    $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $sql = "INSERT INTO transactions (sender, receiver, amount) VALUES ('{$transaction['sender']}', '{$transaction['receiver']}', '{$transaction['amount']}')";
-    mysqli_query($conn, $sql);
-    mysqli_close($conn);
+    //read file to see if there is a transaction
+    $rootPath ="../databases";
+    if(!is_dir($rootPath)){
+        mkdir($rootPath);
+    }
+    $path ="$rootPath/current_transaction.json";
+    $handle= fopen($path,"r+");
+    $fileSize = filesize($path)==0?1024:filesize($path);
+    $transaction = fread($handle,$fileSize);
+    //remote the data
+    fwrite($handle,"");
+    fclose($handle);
+
+    $blockchain = new Blockchain();
+    if($transaction !=null){    
+        //add transaction to local block       
+        $blockchain->addBlock(new Block( time(), json_encode($transaction)));
+
+        $block = $blockchain->getLatestBlock();
+
     
-    // create a new block containing the transaction data
-    $last_block = $blockchain->lastBlock();
-    $new_block = $blockchain->newBlock($transaction);
-    
-    // broadcast the new block to the Java peers
-    $json_block = json_encode($new_block); // stringify the new block as JSON
-    broadcast($json_block);
-    
-    echo "New block added to the blockchain:\n";
-    print_r($new_block);
+        // broadcast the new block to the Java peers
+        $json_block = json_encode($block); // stringify the new block as JSON
+        broadcast($json_block);
+        
+        echo "New block added to the blockchain:\n";
+        print_r($block);
+
+    }
+
+
 }
 
 function broadcast($data) {
