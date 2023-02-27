@@ -28,6 +28,35 @@ function __construct($id=null){
         }//end id check
     }//end constructor
 
+/**
+* Function to records for a particular transaction 
+* @param transactionId id of transaction
+* @return array of fetched records 
+**/
+function getRecordsByTransactionId($transactionId){
+    $records = [];//empty array of records
+        try{
+            $sql="SELECT * FROM transaction_actor WHERE Transaction_ID=?";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->bind_param("i",$transactionId);
+            $stmt->execute();
+            $query = $stmt->get_result();
+            if($query){
+                while($row=$query->fetch_assoc()){
+                    $mTransactionActor= new TransactionActor;
+                    $mTransactionActor->setId($row['ID']);
+                    $mTransactionActor->setUserId ($row['User_ID']);
+                    $mTransactionActor->setTransactionRoleId($row['Transaction_Role_ID']);
+                    $mTransactionActor->setTransactionId($row['Transaction_ID']);
+                    $records[]=$mTransactionActor;
+                }//end while
+            }//end query check
+          }catch(Exception $exception){
+            throw $exception;
+          }//end catch
+        return $records;
+    }//end getAllRecords function
+
 
 /**
 * Function to fetch all records 

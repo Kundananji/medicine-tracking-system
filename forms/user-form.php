@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group m-3">
                         <label for="address">Address</label>
-                        <textarea  id="address" class="form-control" name="address" placeholder="Enter Address"  required value="<?php echo $user->getAddress();?>"></textarea>
+                        <textarea  id="address" class="form-control" name="address" placeholder="Enter Address"  required><?php echo $user->getAddress();?></textarea>
                     </div>
                     <div class="form-group m-3">
                         <label for="email">Email</label>

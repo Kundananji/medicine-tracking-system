@@ -200,7 +200,7 @@ $mUserType = $userType->getUserByTypeId();
 
       currentMarker = null;
 
-     if(mLocation){ //only listen for location chances if mLocation is not defined
+     if(!mLocation){ //only listen for location chances if mLocation is not defined
 
       // This event listener calls addMarker() when the map is clicked.
       google.maps.event.addListener(map, "click", (event) => {

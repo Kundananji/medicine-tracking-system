@@ -4,6 +4,7 @@ include('../classes/blockchain.php');
 include('../classes/block.php');
 include('../classes/database.php');
 include('../classes/user.php');
+include('../classes/transaction.php');
 
 $user = new User();
 
@@ -17,40 +18,67 @@ if ($server === false) {
 
 echo "Server listening on $host:$port\n";
 
+$mTransaction = new Transaction(); //create new instance of transaction
+
 $blockchain = new Blockchain(); // create a new instance of the blockchain
 
 while (true) {
-    $client = stream_socket_accept($server);
-    echo "New client connected\n";
-    
-    $data = stream_get_contents($client); // read incoming data from client
-    $transaction = json_decode($data, true); // decode transaction data from JSON
-    
+    // $client = stream_socket_accept($server);
+    // echo "New client connected\n";
+    // if($client){
+    //     $data = stream_get_contents($client); // read incoming data from client
+    //     $transaction = json_decode($data, true); // decode transaction data from JSON
+    // }
     //read file to see if there is a transaction
-    $rootPath ="../databases";
-    if(!is_dir($rootPath)){
-        mkdir($rootPath);
+
+    //fetch one transaction at a time
+
+    $transactions = $mTransaction->getPendingRecords(1);
+    $transaction = null;
+    if(sizeof($transactions)>0){
+        $transaction = $transactions[0];
     }
-    $path ="$rootPath/current_transaction.json";
-    $handle= fopen($path,"r+");
-    $fileSize = filesize($path)==0?1024:filesize($path);
-    $transaction = fread($handle,$fileSize);
-    //remote the data
-    fwrite($handle,"");
-    fclose($handle);
 
     $blockchain = new Blockchain();
+
     if($transaction !=null){  
         
+
+        //get actors
+        
+
+
+
+        //create transaction block
+        $block = array(
+            "transactionId"=>$transaction->getId(),
+            "dateOfTransaction"=>$transaction->getDateOfTransaction(),
+            "details"=>$transaction->getDetails(),
+            "location"=>$transaction->getLocation,
+            "transactionType"=>$transaction->getTransactionType()->getName(),
+            "actors"=>$actors,
+            "medicines"=>$medicines
+        );
+
+
+
+
+
+
+
+
+
+
         // broadcast the new transaction to the Java peers to add to their blockchain
         $data = array(
             "type"=>"transaction",
-            "data"=>$block
+            "data"=>$transaction
         );
+
         broadcast(json_encode($data));
 
         //add transaction to local block       
-        $blockchain->addBlock(new Block( time(), json_encode($transaction)));
+        $blockchain->addBlock(new Block( time(), $transaction));
 
         $block = $blockchain->getLatestBlock(); 
 
@@ -62,7 +90,7 @@ while (true) {
 
         broadcast(json_encode($data));
         echo "New block added to the blockchain:\n";
-        print_r($block);
+        print_r($data);
 
     }
 
@@ -81,6 +109,7 @@ function broadcast($data) {
 
     // broadcast the data to all Java peers   
     foreach ($java_peers as $java_peer) {
+        echo"Sending to $java_peer";
         $socket = stream_socket_client("tcp://$java_peer", $errno, $errorMessage, 10);
         if ($socket === false) {
             echo "Failed to connect to $java_peer: $errorMessage\n";

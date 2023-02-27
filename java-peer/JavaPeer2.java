@@ -14,7 +14,7 @@ public class JavaPeer2 {
     private static ArrayList<Block> blockchain;
 
     public static void main(String[] args) {
-        int port = 9000;
+        int port = 12345;
         try {
             blockchain = loadBlockchainFromFile(); // load blockchain from JSON file
             ServerSocket serverSocket = new ServerSocket(port);

@@ -32,6 +32,37 @@ function __construct($id=null){
     }//end constructor
 
 
+
+/**
+* Function to fetch all pending transactions 
+* @param limit the number of records to return
+* @return array of transactions 
+**/
+function getPendingRecords($limit=1){
+    $records = [];//empty array of records
+        try{
+            $sql="SELECT * FROM transaction WHERE synced=0 LIMIT $limit";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->execute();
+            $query = $stmt->get_result();
+            if($query){
+                while($row=$query->fetch_assoc()){
+                    $mTransaction= new Transaction;
+                    $mTransaction->setId($row['ID']);
+                    $mTransaction->setDateOfTransaction($row['Date_Of_Transaction']);
+                    $mTransaction->setDetails($row['Details']);
+                    $mTransaction->setLocation($row['Location']);
+                    $mTransaction->setTransactionTypeId($row['Transaction_Type_ID']);
+                    $records[]=$mTransaction;
+                }//end while
+            }//end query check
+          }catch(Exception $exception){
+            throw $exception;
+          }//end catch
+        return $records;
+    }//end getAllRecords function
+
+
 /**
 * Function to fetch all records 
 * @return array of fetched records 
@@ -161,20 +192,8 @@ function createTransaction($dateOfTransaction,
             "actors"=>$actors,
             "medicines"=>$medicines
         );
-
             
-        //write transaction to a flat file for php peer to pick up
-        $rootPath ="../databases";
-        if(!is_dir($rootPath)){
-            mkdir($rootPath);
-        }
-        $path ="$rootPath/currentblockchain.json";
-        $handle= fopen($path,"w");
-        $fileSize = filesize($path)==0?1024:filesize($path);
-        fwrite($handle,json_encode($block));
-        fclose($handle);
-
-
+       $_SESSION['block'] = $block;
 
     }catch(Exception $exception){
         throw $exception;
