@@ -23,6 +23,7 @@ function __construct($id=null){
                     $this->setDetails($row['Details']);
                     $this->setLocation($row['Location']);
                     $this->setTransactionTypeId($row['Transaction_Type_ID']);
+
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -92,6 +93,29 @@ function getAllRecords(){
         return $records;
     }//end getAllRecords function
 
+
+/**
+ * 
+ * function to mark a transaction as synced witht the blockchain network
+ * 
+ */
+
+function markAsSynced(){
+    try{
+
+            $sql="UPDATE `transaction` SET `Synced`=1 WHERE ID=?";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->bind_param("i",$this->id);
+        
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->close();
+        return new Transaction($this->id); 
+    }catch(Exception $exception){
+        throw $exception;
+    }
+}//end sync function
+
 //function to create or edit instance of transaction
 function saveTransaction($id,$dateOfTransaction,$details,$location,$transactionTypeId){
     try{
@@ -99,11 +123,11 @@ function saveTransaction($id,$dateOfTransaction,$details,$location,$transactionT
         if((int)$id==0){
             $sql="INSERT INTO `transaction`(`ID`,`Date_Of_Transaction`,`Details`,`Location`,`Transaction_Type_ID`) VALUES(?,?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("issss",$id,$dateOfTransaction,$details,$location,$transactionTypeId);
+            $stmt->bind_param("isssi",$id,$dateOfTransaction,$details,$location,$transactionTypeId);
         }else{
             $sql="UPDATE `transaction` SET `Date_Of_Transaction`=?,`Details`=?,`Location`=?,`Transaction_Type_ID`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("ssssi",$dateOfTransaction,$details,$location,$transactionTypeId,$id);
+            $stmt->bind_param("sssii",$dateOfTransaction,$details,$location,$transactionTypeId,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -114,8 +138,6 @@ function saveTransaction($id,$dateOfTransaction,$details,$location,$transactionT
         throw $exception;
     }
 }//end save function
-
-
 
 //function to create or edit instance of transaction
 /**
@@ -223,7 +245,7 @@ function createTransaction($dateOfTransaction,
       }
 
     function setTransactionType(){
-        $this->transactionType = new TransactionType($this->transactionTypeId);
+        $this->transactionType = new TypeOfTransaction($this->transactionTypeId);
     }
 
     function getTransactionType(){
@@ -253,6 +275,8 @@ function createTransaction($dateOfTransaction,
 
     function setTransactionTypeId($transactionTypeId){
           $this->transactionTypeId=$transactionTypeId;
+          $this->setTransactionType();
+ 
       }
 
 
