@@ -48,6 +48,8 @@ while (true) {
         $transaction = json_decode($data, true); // decode transaction data from JSON
 
         echo"Received Data from Client: $transaction\n\n";
+
+        //type of data received can be a block, or a whole blockchain
     }
  
 
