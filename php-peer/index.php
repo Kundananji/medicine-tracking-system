@@ -42,8 +42,9 @@ while (true) {
     }
 
     $client = stream_socket_accept($server);
-    echo "New client connected to PHP server\n\n";
+  
     if($client){
+        echo "New client connected to PHP server\n\n";
         $data = stream_get_contents($client); // read incoming data from client
         $transaction = json_decode($data, true); // decode transaction data from JSON
 
