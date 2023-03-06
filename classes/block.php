@@ -8,7 +8,7 @@ class Block implements JsonSerializable{
     public $hash;
     public $nonce;
 
-    public function __construct($timestamp, $data, $previousHash = '') {
+    public function __construct($timestamp=null, $data=null, $previousHash = '') {
 
         $this->timestamp = $timestamp;
         $this->data = $data;

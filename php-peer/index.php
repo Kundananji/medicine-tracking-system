@@ -29,10 +29,12 @@ $mTransaction = new Transaction(); //create new instance of transaction
 
 $blockchain = new Blockchain(); // create a new instance of the blockchain
 $lastSend  = 0;
+$lastSendBlockChain = time();
 
 
 while (true) {
 
+    $blockchain = new Blockchain();
     $miners =  $user->getMiners();
 
     //fetch java peers from database
@@ -49,8 +51,48 @@ while (true) {
         $transaction = json_decode($data, true); // decode transaction data from JSON
 
         echo"Received Data from Client: $transaction\n\n";
-
         //type of data received can be a block, or a whole blockchain
+
+        if($transaction["type"]=="block"){
+
+            echo"Received block from network";
+
+            $mBlock = $transaction['data'];
+
+            $receivedBlock = new Block();
+
+            $receivedBlock->index = $mBlock['index'];
+            $receivedBlock->timestamp =$mBlock['timestamp'];
+            $receivedBlock->data = $mBlock['data'];
+            $receivedBlock->previousHash = $mBlock['previousHash'];
+            $receivedBlock->hash = $mBlock['hash'];
+            $receivedBlock->nonce = $mBlock['nonce'];
+
+            //add transaction to local block       
+            //$blockchain->addBlock(new Block( time(), $transactionBlock));
+            $block = $blockchain->getLatestBlock(); 
+
+            if($block->hash == $receivedBlock->previousHash){
+                $blockchain->addBlock(new Block( time(), $transactionBlock)); 
+                echo"New Received Block has been added to blockchain\n";
+            }
+            else{
+                echo"Received block discarded because it is invalid\n";
+            }
+
+        }
+
+        if($transaction["type"]=="blockchain"){
+
+            echo"Received blockchain from network";
+
+            $chain = $transaction['data'];
+
+            //todo: 
+
+
+
+        }
     }
  
 
@@ -61,7 +103,7 @@ while (true) {
         $transaction = $transactions[0];
     }
 
-    $blockchain = new Blockchain();
+
 
     //broadcast java peers only if we send 60 seconds or more agao
     if(count($java_peers) > 0 && time() - $lastSend  > 60){
@@ -146,7 +188,7 @@ while (true) {
             "data"=>$transactionBlock
         );
 
-        broadcast(json_encode($transactionBlock));
+        broadcast(json_encode($data));
 
         //add transaction to local block       
         $blockchain->addBlock(new Block( time(), $transactionBlock));
@@ -157,10 +199,31 @@ while (true) {
             "type"=>"block",
             "data"=>$block
         );
-
         broadcast(json_encode($data));
+        
         echo "New block added to the blockchain\n";     
 
+    }
+
+    //send blockchain to network every 60 seconds
+    if(time() - $lastSendBlockChain > 60){
+       $chain =  $blockchain->chain;
+       if($chain!=null && sizeof($chain)>0){
+
+        // broadcast blockchain to Java peers
+        $data = array(
+            "type"=>"blockchain",
+            "data"=>$chain
+        );
+
+        broadcast(json_encode($data));
+        
+        echo "Broadcasting blockchain\n";    
+
+
+       }
+
+        $lastSendBlockChain = time();
     }
 
 
