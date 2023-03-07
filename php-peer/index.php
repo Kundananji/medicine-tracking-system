@@ -18,7 +18,7 @@ $mTransactionMedicine = new TransactionMedicine();
 $host = 'localhost';
 $port = 8000;
 
-$server = stream_socket_server("tcp://$host:$port", $errno, $errorMessage);
+$server = stream_socket_server("tcp://0.0.0.0:$port", $errno, $errorMessage);
 if ($server === false) {
     die("Failed to create socket: $errorMessage");
 }
@@ -31,7 +31,12 @@ $blockchain = new Blockchain(); // create a new instance of the blockchain
 $lastSend  = 0;
 $lastSendBlockChain = time();
 
+$sending = "sending";
+$receiving="receiving";
 
+$currentOperation = $receiving;
+
+//server will be in either receiving or sending state
 while (true) {
 
     $blockchain = new Blockchain();
@@ -43,15 +48,20 @@ while (true) {
         $java_peers[]=$miner->getIpAddress();
     }
 
+    if($currentOperation == $receiving){
+
+    echo "Waiting for client to connect\n\n";
     $client = stream_socket_accept($server);
   
     if($client){
         echo "New client connected to PHP server\n\n";
         $data = stream_get_contents($client); // read incoming data from client
-        $transaction = json_decode($data, true); // decode transaction data from JSON
+        $transaction = json_decode($data,true); // decode transaction data from JSON
 
-        echo"Received Data from Client: $transaction\n\n";
+        echo"Received Data from Client: $data\n\n";
         //type of data received can be a block, or a whole blockchain
+
+        print_r($transaction);
 
         if($transaction["type"]=="block"){
 
@@ -86,7 +96,9 @@ while (true) {
 
             echo"Received blockchain from network";
 
-            $chain = $transaction['data'];
+            $chain = $transaction["data"];
+
+    
 
             $blocks = [];
             //chain is an array
@@ -102,7 +114,6 @@ while (true) {
             }
 
             //temporarily store old chain
-
             $oldChain = $blockchain->chain;
 
 
@@ -127,6 +138,9 @@ while (true) {
 
         }
     }
+   // $currentOperation =$sending;
+   }
+   else{
  
 
     //fetch one transaction at a time
@@ -258,6 +272,10 @@ while (true) {
 
         $lastSendBlockChain = time();
     }
+
+    $currentOperation =$receiving;
+
+}
 
 
 }

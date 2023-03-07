@@ -127,7 +127,7 @@
         }
 
 
-        $sql = "INSERT INTO `user`( `Name`, `Address`, `Email`, `Username`, `password`, `User_Type_ID`) VALUES ('$name','$address','$email','$username','$hashedPassword ','$userTypeId')";
+        $sql = "INSERT INTO `user`( `Name`, `Address`, `Email`, `Username`, `password`, `User_Type_ID`) VALUES ('$name','$address','$email','$username','$hashedPassword','$userTypeId')";
 
         $query = Database::getConnection()->query($sql);
         if(!$query || Database::getConnection()->affected_rows ==0 ){
