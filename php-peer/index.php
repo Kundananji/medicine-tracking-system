@@ -88,7 +88,40 @@ while (true) {
 
             $chain = $transaction['data'];
 
-            //todo: 
+            $blocks = [];
+            //chain is an array
+            foreach($chain as $item){
+                $block = new Block();
+                foreach($item as $key=>$value){
+                    $block->$key = $value;
+                }
+
+                //add to blocks
+                $blocks[]=$block;
+
+            }
+
+            //temporarily store old chain
+
+            $oldChain = $blockchain->chain;
+
+
+            //check length of your chain
+            if(sizeof($blockchain->chain) < $blocks){
+                //received chain is longer, 
+                //replace local chain with this one
+
+                $blockchain->chain = $blocks;
+
+                if($blockchain->isValid()){
+                  echo"Discarded own blockchain for received block\n";
+                  $blockchain->SaveBlockchain();
+                }
+                else{
+                    echo"Received blockchain is not valid, discarded\n";
+                    $blockchain->chain = $oldChain;
+                }
+            }
 
 
 

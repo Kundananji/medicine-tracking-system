@@ -63,6 +63,19 @@ class Blockchain implements JsonSerializable{
         return true;
     }
 
+    public function SaveBlockchain(){
+         //record chain to database
+         $rootPath ="../databases";
+         if(!is_dir($rootPath)){
+             mkdir($rootPath);
+         }
+         $path ="$rootPath/blockchain.json";
+         $handle= fopen($path,"w+");
+         fwrite($handle,json_encode($this->chain));
+         fclose($handle);
+
+    }
+
     public function jsonSerialize()
     {
       return get_object_vars($this);
