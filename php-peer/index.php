@@ -61,11 +61,11 @@ while (true) {
         echo"Received Data from Client: $data\n\n";
         //type of data received can be a block, or a whole blockchain
 
-        print_r($transaction);
+  
 
         if($transaction["type"]=="block"){
 
-            echo"Received block from network";
+            echo"Received block from network.\n";
 
             $mBlock = $transaction['data'];
 
@@ -74,15 +74,17 @@ while (true) {
             $receivedBlock->index = $mBlock['index'];
             $receivedBlock->timestamp =$mBlock['timestamp'];
             $receivedBlock->data = $mBlock['data'];
-            $receivedBlock->previousHash = $mBlock['previousHash'];
-            $receivedBlock->hash = $mBlock['hash'];
+            $receivedBlock->previousHash = isset($mBlock['previousHash'])?$mBlock['previousHash']:null;
+            $receivedBlock->hash = isset($mBlock['hash'])?$mBlock['hash']:null;
             $receivedBlock->nonce = $mBlock['nonce'];
 
             //add transaction to local block       
             //$blockchain->addBlock(new Block( time(), $transactionBlock));
             $block = $blockchain->getLatestBlock(); 
 
-            if($block->hash == $receivedBlock->previousHash){
+            //accept block if its previous hash matches with the has of the previous block on your chain
+            //or if you have no block and its previous hash is null: implies it is the first in the block
+            if($block->hash == $receivedBlock->previousHash || $block==null && $receivedBlock->previousHash == null){
                 $blockchain->addBlock(new Block( time(), $transactionBlock)); 
                 echo"New Received Block has been added to blockchain\n";
             }
@@ -94,7 +96,7 @@ while (true) {
 
         if($transaction["type"]=="blockchain"){
 
-            echo"Received blockchain from network";
+            echo"Received blockchain from network.\n";
 
             $chain = $transaction["data"];
 
@@ -118,7 +120,7 @@ while (true) {
 
 
             //check length of your chain
-            if(sizeof($blockchain->chain) < $blocks){
+            if(sizeof($blockchain->chain) < sizeof($blocks)){
                 //received chain is longer, 
                 //replace local chain with this one
 
@@ -126,7 +128,7 @@ while (true) {
 
                 if($blockchain->isValid()){
                   echo"Discarded own blockchain for received block\n";
-                  $blockchain->SaveBlockchain();
+                //  $blockchain->SaveBlockchain();
                 }
                 else{
                     echo"Received blockchain is not valid, discarded\n";
@@ -138,7 +140,7 @@ while (true) {
 
         }
     }
-   // $currentOperation =$sending;
+    $currentOperation =$sending;
    }
    else{
  
@@ -195,7 +197,7 @@ while (true) {
 
         foreach($medicines as $transactionMedicine){
 
-           $medicineArray = array(
+           $medicineArray[] = array(
             "medicineId"=>$transactionMedicine->getMedicine()->getId(),
             "name"=>$transactionMedicine->getMedicine()->getName(),
             "description"=> $transactionMedicine->getMedicine()->getDescription(),
