@@ -73,6 +73,42 @@
       <?php
            }
       ?>
+
+
+<?php
+  //receipt notification
+           if($mUserType->getCanReceive()){
+          ?>
+       <!-- Receipts-->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#receipts-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-receipt"></i><span>Receipts</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="receipts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+   
+          <li>
+            <a href="javascript:void(0)" onclick="ReceiptNotification.addReceiptNotification()">
+              <i class="bi bi-circle"></i><span>Add New Receipt</span>
+            </a>
+          </li>
+    
+  
+          <li>
+            <a href="javascript:void(0)" onclick="ReceiptNotification.viewReceiptNotification()">
+              <i class="bi bi-circle"></i><span>View Receipts</span>
+            </a>
+          </li>
+   
+
+        </ul>
+      </li><!-- End Medicines Nav -->
+
+      <?php
+           }
+      ?>
+
+
+
       <!-- mining activities -->
       <?php
            if($mUserType->getCanMine()){
