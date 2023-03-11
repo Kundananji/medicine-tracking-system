@@ -109,6 +109,106 @@
 
 
 
+<?php
+  //delivery notification
+           if($mUserType->getCanDeliver()){
+          ?>
+       <!-- Deliveries-->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#deliveries-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-truck"></i><span>Deliveries</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="deliveries-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+   
+          <li>
+            <a href="javascript:void(0)" onclick="DeliveryNotification.addDeliveryNotification()">
+              <i class="bi bi-circle"></i><span>Add New Delivery</span>
+            </a>
+          </li>
+    
+  
+          <li>
+            <a href="javascript:void(0)" onclick="DeliveryNotification.viewDeliveryNotification()">
+              <i class="bi bi-circle"></i><span>View Deliveries</span>
+            </a>
+          </li>
+   
+
+        </ul>
+      </li><!-- End Medicines Nav -->
+
+      <?php
+           }
+      ?>
+
+
+<?php
+  //prescription notification
+           if($mUserType->getCanDispense()){
+          ?>
+       <!-- dipenses-->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#prescriptions-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-arrow-right"></i><span>Prescriptions</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="prescriptions-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+   
+          <li>
+            <a href="javascript:void(0)" onclick="Prescription.addPrescription()">
+              <i class="bi bi-circle"></i><span>Add New Prescription</span>
+            </a>
+          </li>
+    
+  
+          <li>
+            <a href="javascript:void(0)" onclick="Prescription.viewPrescription()">
+              <i class="bi bi-circle"></i><span>View Prescriptions</span>
+            </a>
+          </li>
+   
+
+        </ul>
+      </li><!-- End Prescriptions Nav -->
+
+      <?php
+           }
+      ?>
+
+
+<?php
+  //Damages notification
+           if($mUserType->getCanReportDamage()){
+          ?>
+       <!-- damages-->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#damages-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-arrow-right"></i><span>Damages</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="damages-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+   
+          <li>
+            <a href="javascript:void(0)" onclick="DamageNotification.addDamageNotification()">
+              <i class="bi bi-circle"></i><span>Add New Damage</span>
+            </a>
+          </li>
+    
+  
+          <li>
+            <a href="javascript:void(0)" onclick="DamageNotification.viewDamageNotification()">
+              <i class="bi bi-circle"></i><span>View Damages</span>
+            </a>
+          </li>
+   
+
+        </ul>
+      </li><!-- End Prescriptions Nav -->
+
+      <?php
+           }
+      ?>
+
+
+
       <!-- mining activities -->
       <?php
            if($mUserType->getCanMine()){

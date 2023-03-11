@@ -73,6 +73,7 @@ class Medicine implements \JsonSerializable
           $mMedicine->setPackageDetails($row['Package_Details']);
           $mMedicine->setManufacturerId($row['Manufacturer_ID']);
           $mMedicine->setManufacturer($row['Manufacturer_ID']);
+     
           $records[] = $mMedicine;
         } //end while
       } //end query check

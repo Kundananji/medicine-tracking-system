@@ -132,7 +132,7 @@ try {
          exit(json_encode(
            array(
              "status" => "failed",
-             "message" => "Quantity is missing"
+             "message" => "Amount is missing"
            )
          ));
      };
@@ -186,8 +186,9 @@ try {
       "message" => "Sale Notification added successfully"
     )
   ));
+
 } catch (Exception $ex) {
-  print_r($ex);
+ 
   //roll back whatever has been done
   Database::getConnection()->query("ROLLBACK;");
   exit(json_encode(

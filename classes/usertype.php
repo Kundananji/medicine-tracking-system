@@ -10,6 +10,8 @@ class UserType{
   private $canDeliver;
   private $canDispense;
   private $canMine;
+  private $canReportDamage;
+  private $canViewReport;
 
 //Constructor function, creates a new instance of userType; 
 function __construct($id=null){
@@ -203,4 +205,44 @@ function saveUserType($id,$name ,$description,$canAddMedicine,$canViewMedicine,$
 
 
 
+
+  /**
+   * Get the value of canReportDamage
+   */ 
+  public function getCanReportDamage()
+  {
+    return $this->canReportDamage;
+  }
+
+  /**
+   * Set the value of canReportDamage
+   *
+   * @return  self
+   */ 
+  public function setCanReportDamage($canReportDamage)
+  {
+    $this->canReportDamage = $canReportDamage;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of canViewReport
+   */ 
+  public function getCanViewReport()
+  {
+    return $this->canViewReport;
+  }
+
+  /**
+   * Set the value of canViewReport
+   *
+   * @return  self
+   */ 
+  public function setCanViewReport($canViewReport)
+  {
+    $this->canViewReport = $canViewReport;
+
+    return $this;
+  }
 }//end class

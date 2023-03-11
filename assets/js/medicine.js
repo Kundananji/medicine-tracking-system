@@ -68,6 +68,7 @@ let Medicine = (function ($) {
                         <td>
                         <input type="text" class="form-control" value="" id="med_${medicine.id}" placeholder="Enter Amount"/>
                        </td>
+                       
                         <td>
                           <a href="javascript:void(0)" onclick="Medicine.removeMedicine(${medicine.id})"> <i class="bi bi-trash"></i> Remove</a>
                         </td>
@@ -92,7 +93,7 @@ let Medicine = (function ($) {
    for(let i=0; i<elements.length; i++){
       var elem = elements[i];
        console.log(elem);
-       if(elem.type=="checkbox" && elem.name =="medicines[]"){
+       if(elem.type=="checkbox" && elem.name =="medicines[]" && elem.checked){
          if(!window.selectedMedicines){
             window.selectedMedicines = [];
          }

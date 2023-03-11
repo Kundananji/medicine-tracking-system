@@ -1,5 +1,5 @@
 <?php
-class User{
+class User implements \JsonSerializable{
   private $id;
   private $name;
   private $address;
@@ -21,6 +21,7 @@ function __construct($id=null){
             $query = $stmt->get_result();
             if($query){
                 while($row=$query->fetch_assoc()){
+              
                     $this->setId($row['ID']);
                     $this->setName($row['Name']);
                     $this->setAddress($row['Address']);
@@ -225,7 +226,13 @@ function saveUser($id,$name,$address,$email,$username,$password,$userTypeId,$pub
         return implode(" ",$names);
     }
 
-
-
+   /**
+    * 
+    * function to serialize this Json object
+    */
+    public function jsonSerialize()
+    {
+      return get_object_vars($this);
+    }
 
 }//end class
