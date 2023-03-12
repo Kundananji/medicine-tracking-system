@@ -137,7 +137,7 @@ try {
       ));
     };
 
-    $savedReceiptNotificationMedicine = $receiptNotificationMedicine->saveReceiptNotificationMedicine($id, $saleNotificationId, $medicineId, $quantity, $amount);
+    $savedReceiptNotificationMedicine = $receiptNotificationMedicine->saveReceiptNotificationMedicine($id, $receiptNotificationId, $medicineId, $quantity, $amount);
     if ($savedReceiptNotificationMedicine == null) {
       //failed to save
       $failed += 1;
@@ -190,6 +190,7 @@ try {
     )
   ));
 } catch (Exception $ex) {
+  print_r($ex);
   //roll back whatever has been done
   Database::getConnection()->query("ROLLBACK;");
   exit(json_encode(

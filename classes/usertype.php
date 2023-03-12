@@ -34,6 +34,8 @@ function __construct($id=null){
                     $this->setCanDeliver($row['Can_Deliver']);
                     $this->setCanDispense($row['Can_Dispense']);
                     $this->setCanMine($row['Can_Mine']);
+                    $this->setCanReportDamage($row['Can_Report_Damage']);
+                    $this->setCanViewReport($row['Can_View_Report']);
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -68,6 +70,8 @@ function getAllRecords(){
                     $mUserType->setCanDeliver($row['Can_Deliver']);
                     $mUserType->setCanDispense($row['Can_Dispense']);
                     $mUserType->setCanMine($row['Can_Mine']);
+                    $mUserType->setCanReportDamage($row['Can_Report_Damage']);
+                    $mUserType->setCanViewReport($row['Can_View_Report']);
                     $records[]=$mUserType;
                 }//end while
             }//end query check

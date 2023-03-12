@@ -37,6 +37,7 @@ $mUserType = $userType->getUserByTypeId();
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
+  
   <style>
     #map {
       width: 100%;
@@ -116,13 +117,13 @@ $mUserType = $userType->getUserByTypeId();
 
   <!-- modal: show content -->
   <div class="modal fade" id="showContentModal" aria-labelledby="showContentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="showContentModalLabel">Modal title</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="show-content-modal-body">
+        <div class="modal-body table-responsive" id="show-content-modal-body">
 
         </div>
         <div class="modal-footer">

@@ -12,7 +12,7 @@ if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');
 }
 ?>
-<table class="table table-bordered">
+<table class="table table-bordered" id="table-data-table">
     <thead>
         <tr>
             <th>
@@ -31,6 +31,9 @@ if(sizeof($records) == 0){
             </th>
             <th>
                 Location
+            </th>
+            <th>
+
             </th>
         </tr>
     </thead>
@@ -55,8 +58,12 @@ if(sizeof($records) == 0){
           <td>
               <?php echo $mDeliveryNotification->getReceipient(); ?> 
           </td>
+
           <td>
-              <?php echo $mDeliveryNotification->getLocation(); ?> 
+              <a href="javascript:showLocation('<?php echo $mDeliveryNotification->getLocation(); ?>')"><i class="bi bi-geo-alt-fill"></i> View Location</a>
+          </td>
+          <td>
+              <a href="javascript:DeliveryNotificationMedicine.viewDeliveryNotificationMedicine({deliveryNotificationId: '<?php echo $mDeliveryNotification->getId(); ?> '})"><i class="bi bi-capsule-pill"></i> View Medicines</a>
           </td>
       </tr>
 <?php

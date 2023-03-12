@@ -77,7 +77,6 @@ let submitForm = (e)=>{
         $('#page-content').html(loader);
       }
 
-      console.log(data);
 
       $.ajax({
           url:"ajax/view-salenotificationmedicine.php",
@@ -87,6 +86,7 @@ let submitForm = (e)=>{
             if(data.saleNotificationId){
               $('#showContentModal').modal('show');
               $('#show-content-modal-body').html(resp);
+              $('#table-data-table').DataTable();
             }
             else{
               $('#page-content').html(resp);

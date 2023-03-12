@@ -30,7 +30,35 @@ function __construct($id=null){
         }//end id check
     }//end constructor
 
-
+/**
+* Function to fetch records by receipt notification Id
+* @return array of fetched records  
+**/
+function getRecordsByReceiptNotificationId($receiptNotificationId){
+  $records = [];//empty array of records
+      try{
+          $sql="SELECT * FROM receipt_notification_medicine WHERE Receipt_Notification_ID=?";
+          $stmt=Database::getConnection()->prepare($sql);
+          $stmt->bind_param("i",$receiptNotificationId);
+          $stmt->execute();
+          $query = $stmt->get_result();
+          if($query){
+              while($row=$query->fetch_assoc()){
+                $mReceiptNotificationMedicine= new ReceiptNotificationMedicine;
+                $mReceiptNotificationMedicine->setId($row['ID']);
+                $mReceiptNotificationMedicine->setReceiptNotificationId($row['Receipt_Notification_ID']);
+                $mReceiptNotificationMedicine->setMedicineId($row['Medicine_ID']);
+                $mReceiptNotificationMedicine->setQuantity($row['Quantity']);
+                $mReceiptNotificationMedicine->setAmount($row['Amount']);
+                $records[]=$mReceiptNotificationMedicine;
+              }//end while
+          }//end query check
+        }catch(Exception $exception){
+          throw $exception;
+        }//end catch
+      return $records;
+  }
+//end getRecordsByReceiptNotificationId function
 /**
 * Function to fetch all records 
 * @return array of fetched records 

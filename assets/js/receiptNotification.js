@@ -104,12 +104,16 @@ let submitForm = (e)=>{
 
 } //end view function
 
+
   let viewReceiptNotification=()=>{
-      $.ajax({
+    $('#page-content').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading... please wait.</div>`);
+    
+    $.ajax({
           url:"ajax/view-receiptnotification.php",
           type:"get",
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('#table-data-table').DataTable();
           }
       })
 

@@ -1,6 +1,7 @@
 <?php
  include('../classes/database.php');
  include('../classes/medicine.php');
+ include('../classes/user.php');
 
 $id= trim(filter_var($_POST['id'],FILTER_SANITIZE_STRING));
 $name= trim(filter_var($_POST['name'],FILTER_SANITIZE_STRING));
@@ -32,6 +33,7 @@ try{
     ));
 }
 catch(Exception $ex){
+  //print_r($ex);
 exit(json_encode(
   array(
   "status"=>"failed",

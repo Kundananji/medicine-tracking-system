@@ -24,7 +24,7 @@ if (sizeof($records) == 0) {
     exit('<div class="alert alert-warning">No records available.</div>');
 }
 ?>
-<table class="table table-bordered">
+<table class="table table-striped table-bordered" id="table-data-table">
     <thead>
         <tr>
             <th>

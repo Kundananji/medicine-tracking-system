@@ -320,6 +320,7 @@ let submitForm = (e)=>{
           type:"get",
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('#table-data-table').DataTable();
           }
       })
 

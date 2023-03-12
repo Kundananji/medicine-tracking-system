@@ -85,6 +85,8 @@ let Medicine = (function ($) {
    }; //end submit form-add-medicine
    
      let addMedicine=(id)=>{
+        $('#page-content').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading... please wait.</div>`);
+    
          $.ajax({
              url:"forms/medicine-form.php",
              type:"get",
@@ -99,6 +101,8 @@ let Medicine = (function ($) {
    } //end view function
    
      let viewMedicine=()=>{
+        $('#page-content').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading... please wait.</div>`);
+    
          $.ajax({
              url:"ajax/view-medicine.php",
              type:"get",

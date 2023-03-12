@@ -68,12 +68,27 @@ let submitForm = (e)=>{
 
 } //end view function
 
-  let viewDeliveryNotificationMedicine=()=>{
+  let viewDeliveryNotificationMedicine=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+    if(data.deliveryNotificationId){        
+       $('#show-content-modal-body').html(loader);
+     }
+     else{
+       $('#page-content').html(loader);
+     }
       $.ajax({
           url:"ajax/view-deliverynotificationmedicine.php",
           type:"get",
           success:(resp)=>{
-              $('#page-content').html(resp);
+            if(data.deliveryNotificationId){
+                $('#showContentModal').modal('show');
+                $('#show-content-modal-body').html(resp);
+                $('#table-data-table').DataTable();
+              }
+              else{
+                $('#page-content').html(resp);
+                $('#table-data-table').DataTable();
+              }
           }
       })
 

@@ -4,7 +4,7 @@ class DeliveryNotificationMedicine{
   private $deliveryNotificationId;
   private $medicineId;
   private $quantity;
-  private $amount;
+
 
 //Constructor function, creates a new instance of deliveryNotificationMedicine; 
 function __construct($id=null){
@@ -21,7 +21,7 @@ function __construct($id=null){
                     $this->setDeliveryNotificationId($row['Delivery_Notification_ID']);
                     $this->setMedicineId($row['Medicine_ID']);
                     $this->setQuantity($row['Quantity']);
-                    $this->setAmount($row['Amount']);
+ 
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -29,6 +29,37 @@ function __construct($id=null){
           }//end catch
         }//end id check
     }//end constructor
+
+
+/**
+* Function to fetch all records 
+* @param deliveryNotificatinId : notification id to searcy by
+* @return array of fetched records 
+* Function to fetch all records 
+**/
+function getRecordsByDeliveryNotificationId($deliveryNotificationId){
+    $records = [];//empty array of records
+        try{
+            $sql="SELECT * FROM delivery_notification_medicine WHERE Delivery_Notification_ID=?";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->bind_param("i",$deliveryNotificationId);
+            $stmt->execute();
+            $query = $stmt->get_result();
+            if($query){
+                while($row=$query->fetch_assoc()){
+                    $mDeliveryNotificationMedicine= new DeliveryNotificationMedicine;
+                    $mDeliveryNotificationMedicine->setId($row['ID']);
+                    $mDeliveryNotificationMedicine->setDeliveryNotificationId($row['Delivery_Notification_ID']);
+                    $mDeliveryNotificationMedicine->setMedicineId($row['Medicine_ID']);
+                    $mDeliveryNotificationMedicine->setQuantity($row['Quantity']);
+                    $records[]=$mDeliveryNotificationMedicine;
+                }//end while
+            }//end query check
+          }catch(Exception $exception){
+            throw $exception;
+          }//end catch
+        return $records;
+    }//end getAllRecords function
 
 
 /**
@@ -50,7 +81,6 @@ function getAllRecords(){
                     $mDeliveryNotificationMedicine->setDeliveryNotificationId($row['Delivery_Notification_ID']);
                     $mDeliveryNotificationMedicine->setMedicineId($row['Medicine_ID']);
                     $mDeliveryNotificationMedicine->setQuantity($row['Quantity']);
-                    $mDeliveryNotificationMedicine->setAmount($row['Amount']);
                     $records[]=$mDeliveryNotificationMedicine;
                 }//end while
             }//end query check
@@ -61,17 +91,17 @@ function getAllRecords(){
     }//end getAllRecords function
 
 //function to create or edit instance of deliveryNotificationMedicine
-function saveDeliveryNotificationMedicine($id,$deliveryNotificationId,$medicineId,$quantity,$amount){
+function saveDeliveryNotificationMedicine($id,$deliveryNotificationId,$medicineId,$quantity){
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `delivery_notification_medicine`(`ID`,`Delivery_Notification_ID`,`Medicine_ID`,`Quantity`,`Amount`) VALUES(?,?,?,?,?)";
+            $sql="INSERT INTO `delivery_notification_medicine`(`ID`,`Delivery_Notification_ID`,`Medicine_ID`,`Quantity`) VALUES(?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("iiiid",$id,$deliveryNotificationId,$medicineId,$quantity,$amount);
+            $stmt->bind_param("iiii",$id,$deliveryNotificationId,$medicineId,$quantity);
         }else{
-            $sql="UPDATE `delivery_notification_medicine` SET `Delivery_Notification_ID`=?,`Medicine_ID`=?,`Quantity`=?,`Amount`=? WHERE ID=?";
+            $sql="UPDATE `delivery_notification_medicine` SET `Delivery_Notification_ID`=?,`Medicine_ID`=?,`Quantity`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("iiidi",$deliveryNotificationId,$medicineId,$quantity,$amount,$id);
+            $stmt->bind_param("iiii",$deliveryNotificationId,$medicineId,$quantity,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -108,10 +138,6 @@ function saveDeliveryNotificationMedicine($id,$deliveryNotificationId,$medicineI
           return $this->quantity;
       }
 
-    function getAmount(){
-          return $this->amount;
-      }
-
 
     function setId($id){
           $this->id=$id;
@@ -133,9 +159,7 @@ function saveDeliveryNotificationMedicine($id,$deliveryNotificationId,$medicineI
       }
 
 
-    function setAmount($amount){
-          $this->amount=$amount;
-      }
+
 
 
       /**

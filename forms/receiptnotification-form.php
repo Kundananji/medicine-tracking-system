@@ -1,4 +1,5 @@
 <?php
+  session_start();
   require("../classes/database.php");
   require("../classes/receiptnotification.php");
   require("../classes/user.php");
@@ -16,6 +17,12 @@
                         <label for="dateOfReceipt">Date of Receipt</label>
                         <input type="date"  id="dateOfReceipt" class="form-control" name="dateOfReceipt" placeholder="Enter Date of Receipt"  required/>
                     </div>
+
+                    <!-- if you are receiving, you are the buyer -->
+
+                    <input type="hidden" name="buyerId" id="buyerId" value="<?php echo $_SESSION['userId']; ?>">
+
+                    <!--
                     <div class="form-group m-3">
                         <label for="buyerId">Buyer</label>
                          <select class="form-control" name="buyerId" id="buyerId">
@@ -28,6 +35,7 @@
                          ?>
                          </select>
                     </div>
+                            -->
                     <div class="form-group m-3">
                         <label for="sellerId">Seller</label>
                          <select class="form-control" name="sellerId" id="sellerId">
@@ -35,6 +43,9 @@
                             $user = new User;
                             $records =$user->getAllRecords();
                             foreach($records as $mUser){
+                                if($mUser->getId() == $_SESSION['userId']){
+                                    continue;
+                                 }
                                  echo'<option value="'.$mUser->getId().'">'.$mUser->getName().'</option>';
                                }
                          ?>

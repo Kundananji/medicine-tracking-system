@@ -68,12 +68,20 @@ let submitForm = (e)=>{
 
 } //end view function
 
-  let viewReceiptNotificationMedicine=()=>{
+  let viewReceiptNotificationMedicine=(data)=>{
       $.ajax({
           url:"ajax/view-receiptnotificationmedicine.php",
           type:"get",
+          data:data,
           success:(resp)=>{
+            if(data.receiptNotificationId){
+                $('#showContentModal').modal('show');
+                $('#show-content-modal-body').html(resp);
+                $('#table-data-table').DataTable();
+              }
+              else{
               $('#page-content').html(resp);
+              }
           }
       })
 

@@ -1,8 +1,15 @@
 <?php
+  session_start();
   require("../classes/database.php");
   require("../classes/medicine.php");
   require("../classes/user.php");
   require("../classes/manufacturer.php");
+  $medicine=null;
+  if(isset($_GET['id'])){
+    $id=trim(filter_var($_GET['id'],FILTER_SANITIZE_STRING));
+
+    $medicine = new Medicine($id);
+  }
 ?>
 <div class="card">
     <div class="card-header">
@@ -12,38 +19,38 @@
         <div class="row">
             <div class="col">
                 <form method="post" id="form-add-medicine" onsubmit="Medicine.submitForm(event);">
-                     <input type="hidden" name="id" id="id" value="0"/>
+                     <input type="hidden" name="id" id="id" value="<?php echo $medicine!=null?$medicine->getId():'';?>"/>
                     <div class="form-group m-3">
                         <label for="name">Name</label>
-                        <input type="text"  id="name" class="form-control" name="name" placeholder="Enter Name"  required/>
+                        <input type="text"  id="name" class="form-control" name="name" placeholder="Enter Name" value="<?php echo $medicine!=null?$medicine->getName():'';?>" required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="description">Description</label>
-                        <textarea  id="description" class="form-control" name="description" placeholder="Enter Description"  required></textarea>
+                        <textarea  id="description" class="form-control" name="description" placeholder="Enter Description"  required><?php echo $medicine!=null?$medicine->getDescription():'';?></textarea>
                     </div>
                     <div class="form-group m-3">
                         <label for="manufacturedDate">Manufactured Date</label>
-                        <input type="date"  id="manufacturedDate" class="form-control" name="manufacturedDate" placeholder="Enter Manufactured Date"  required/>
+                        <input type="date"  id="manufacturedDate" class="form-control" name="manufacturedDate" placeholder="Enter Manufactured Date" value="<?php echo $medicine!=null?$medicine->getManufacturedDate():'';?>"  required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="expiryDate">Expiry Date</label>
-                        <input type="date"  id="expiryDate" class="form-control" name="expiryDate" placeholder="Enter Expiry Date"  required/>
+                        <input type="date"  id="expiryDate" class="form-control" name="expiryDate" placeholder="Enter Expiry Date" value="<?php echo $medicine!=null?$medicine->getExpiryDate():'';?>"  required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="gtin">GTIN</label>
-                        <input type="text"  id="gtin" class="form-control" name="gtin" placeholder="Enter GTIN"  required/>
+                        <input type="text"  id="gtin" class="form-control" name="gtin" placeholder="Enter GTIN" value="<?php echo $medicine!=null?$medicine->getGtin():'';?>" required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="serialNumber">Serial Number</label>
-                        <input type="text"  id="serialNumber" class="form-control" name="serialNumber" placeholder="Enter Serial Number"  required/>
+                        <input type="text"  id="serialNumber" class="form-control" name="serialNumber" placeholder="Enter Serial Number" value="<?php echo $medicine!=null?$medicine->getSerialNumber():'';?>"  required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="lotNumber">LOT Number</label>
-                        <input type="text"  id="lotNumber" class="form-control" name="lotNumber" placeholder="Enter LOT Number"  required/>
+                        <input type="text"  id="lotNumber" class="form-control" name="lotNumber" placeholder="Enter LOT Number" value="<?php echo $medicine!=null?$medicine->getLotNumber():'';?>"  required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="packageDetails">Package Details</label>
-                        <input type="text"  id="packageDetails" class="form-control" name="packageDetails" placeholder="Enter Package Details"  required/>
+                        <input type="text"  id="packageDetails" class="form-control" name="packageDetails" placeholder="Enter Package Details" value="<?php echo $medicine!=null?$medicine->getPackageDetails():'';?>" required/>
                     </div>
                     <div class="form-group m-3">
                         <label for="manufacturerId">Manufacturer</label>
@@ -52,7 +59,7 @@
                             $user = new Manufacturer();
                             $records =$user->getUsers();
                             foreach($records as $mUser){
-                                 echo'<option value="'.$mUser->getId().'">'.$mUser->getName().'</option>';
+                                 echo'<option value="'.$mUser->getId().'" '.( $medicine!=null && $medicine->getManufacturerId() == $mUser->getId()?" selected":'').'>'.$mUser->getName().'</option>';
                                }
                          ?>
                          </select>

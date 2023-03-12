@@ -12,13 +12,10 @@ if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');
 }
 ?>
-<table class="table table-bordered">
+<table class="table table-striped table-bordered" id="table-data-table">
     <thead>
         <tr>
             <th>
-            </th>
-            <th>
-                ID
             </th>
             <th>
                 Date of Receipt
@@ -32,6 +29,9 @@ if(sizeof($records) == 0){
             <th>
                 Location
             </th>
+            <th>
+                Medicine
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -43,9 +43,7 @@ if(sizeof($records) == 0){
           <td>
                <?php echo ++$rowCount;?>
           </td>
-          <td>
-              <?php echo $mReceiptNotification->getId(); ?> 
-          </td>
+
           <td>
               <?php echo $mReceiptNotification->getDateOfReceipt(); ?> 
           </td>
@@ -56,7 +54,10 @@ if(sizeof($records) == 0){
               <?php echo $mReceiptNotification->getSeller(); ?> 
           </td>
           <td>
-              <?php echo $mReceiptNotification->getLocation(); ?> 
+              <a href="javascript:showLocation('<?php echo $mReceiptNotification->getLocation(); ?>')"><i class="bi bi-geo-alt-fill"></i> View Location</a>
+          </td>
+          <td>
+              <a href="javascript:ReceiptNotificationMedicine.viewReceiptNotificationMedicine({receiptNotificationId: '<?php echo $mReceiptNotification->getId(); ?> '})"><i class="bi bi-capsule-pill"></i> View Medicines</a>
           </td>
       </tr>
 <?php

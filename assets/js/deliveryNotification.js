@@ -32,6 +32,37 @@ let submitForm = (e)=>{
         return;
     }
 
+    if(!window.selectedMedicines){
+        alert('Please select the medicine that was sold');
+        return;
+    }
+
+    if(window.selectedMedicines.length == 0){
+        alert('Please select the medicine that was sold');
+        return;
+    }
+
+    //loop through each medicines and append amounts
+    let missing = 0;
+    /*
+    window.selectedMedicines.forEach((elem,index)=>{
+
+        let div = `#med_${elem.id}`;
+        let quantity = $(div).val().trim();
+        if(quantity == null || quantity == ""){
+            alert('Please enter the quantity for '+elem.name);
+            missing+=1;
+        }
+
+        window.selectedMedicines[index].quantity = quantity;
+
+    });
+    */
+
+    if(missing>0){
+        return;
+    }
+
   $.ajax({
       url:"ajax/save-deliverynotification.php",
       type:"post",
@@ -42,11 +73,12 @@ let submitForm = (e)=>{
           deliveredById:deliveredById,
           deliveredToId:deliveredToId,
           location:location,
+          medicines:window.selectedMedicines
       },
       success:(resp)=>{
-          if(resp && resp.status=="status"){
+          if(resp && resp.status=="success"){
               viewDeliveryNotification();
-          }else{;
+          }else{
               alert(resp.message);
           }
       }
@@ -63,17 +95,23 @@ let submitForm = (e)=>{
           },
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('select').select2({
+                width:"resolve"
+              });
           }
       })
 
 } //end view function
 
   let viewDeliveryNotification=()=>{
+    $('#page-content').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading... please wait.</div>`);
+    
       $.ajax({
           url:"ajax/view-deliverynotification.php",
           type:"get",
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('#table-data-table').DataTable();
           }
       })
 

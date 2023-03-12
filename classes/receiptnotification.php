@@ -19,7 +19,7 @@ function __construct($id=null){
                 while($row=$query->fetch_assoc()){
                     $this->setId($row['ID']);
                     $this->setDateOfReceipt($row['Date_Of_Receipt']);
-                    $this->setBuyerId($row['Buyer_ID ']);
+                    $this->setBuyerId($row['Buyer_ID']);
                     $this->setSellerId($row['Seller_ID']);
                     $this->setLocation($row['Location']);
                 }//end while
@@ -48,7 +48,7 @@ function getAllRecords(){
                     $mReceiptNotification= new ReceiptNotification;
                     $mReceiptNotification->setId($row['ID']);
                     $mReceiptNotification->setDateOfReceipt($row['Date_Of_Receipt']);
-                    $mReceiptNotification->setBuyerId($row['Buyer_ID ']);
+                    $mReceiptNotification->setBuyerId($row['Buyer_ID']);
                     $mReceiptNotification->setSellerId($row['Seller_ID']);
                     $mReceiptNotification->setLocation($row['Location']);
                     $records[]=$mReceiptNotification;
@@ -65,11 +65,11 @@ function saveReceiptNotification($id,$dateOfReceipt,$buyerId,$sellerId,$location
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `receipt_notification`(`ID`,`Date_Of_Receipt`,`Buyer_ID `,`Seller_ID`,`Location`) VALUES(?,?,?,?,?)";
+            $sql="INSERT INTO `receipt_notification`(`ID`,`Date_Of_Receipt`,`Buyer_ID`,`Seller_ID`,`Location`) VALUES(?,?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
             $stmt->bind_param("isiis",$id,$dateOfReceipt,$buyerId,$sellerId,$location);
         }else{
-            $sql="UPDATE `receipt_notification` SET `Date_Of_Receipt`=?,`Buyer_ID `=?,`Seller_ID`=?,`Location`=? WHERE ID=?";
+            $sql="UPDATE `receipt_notification` SET `Date_Of_Receipt`=?,`Buyer_ID`=?,`Seller_ID`=?,`Location`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
             $stmt->bind_param("siisi",$dateOfReceipt,$buyerId,$sellerId,$location,$id);
         }//end id null check
