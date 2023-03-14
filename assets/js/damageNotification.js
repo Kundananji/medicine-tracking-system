@@ -32,6 +32,36 @@ let submitForm = (e)=>{
         return;
     }
 
+    if(!window.selectedMedicines){
+        alert('Please select the medicine that was sold');
+        return;
+    }
+
+    if(window.selectedMedicines.length == 0){
+        alert('Please select the medicine that was sold');
+        return;
+    }
+
+    //loop through each medicines and append amounts
+    let missing = 0;
+    window.selectedMedicines.forEach((elem,index)=>{
+
+        let div = `#med_${elem.id}`;
+        let damageDetails = $(div).val().trim();
+        if(damageDetails == null || damageDetails == ""){
+            alert('Please enter the damage details for '+elem.name);
+            missing+=1;
+        }
+
+        window.selectedMedicines[index].damageDetails = damageDetails;
+
+    });
+
+    if(missing>0){
+        return;
+    }
+$('#submit-feedback').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Submitting... please wait.</div>`);
+
   $.ajax({
       url:"ajax/save-damagenotification.php",
       type:"post",
@@ -42,11 +72,12 @@ let submitForm = (e)=>{
           reportedbyId:reportedbyId,
           details:details,
           location:location,
+          medicines:window.selectedMedicines
       },
       success:(resp)=>{
-          if(resp && resp.status=="status"){
+          if(resp && resp.status=="success"){
               viewDamageNotification();
-          }else{;
+          }else{
               alert(resp.message);
           }
       }
@@ -69,6 +100,7 @@ let submitForm = (e)=>{
 } //end view function
 
   let viewDamageNotification=()=>{
+    $('#submit-feedback').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading ... please wait.</div>`);
       $.ajax({
           url:"ajax/view-damagenotification.php",
           type:"get",

@@ -5,7 +5,7 @@ require("../classes/deliverynotification.php");
 require("../classes/medicine.php");
 require("../classes/user.php");
 
-$deliveryNotificationId = isset($_GET['deliveryNotificationId']) ? trim(filter_var($_POST['deliveryNotificationId'], FILTER_SANITIZE_STRING)) : null;
+$deliveryNotificationId = isset($_GET['deliveryNotificationId']) ? trim(filter_var($_GET['deliveryNotificationId'], FILTER_SANITIZE_STRING)) : null;
 $deliveryNotificationMedicine = new DeliveryNotificationMedicine();
 
 if(!isset($deliveryNotificationId)){
@@ -20,7 +20,7 @@ if (sizeof($records) == 0) {
 }
 ?>
 
-<table class="table table-bordered" id="table-data-table">
+<table class="table table-striped table-bordered" id="table-data-table">
     <thead>
         <tr>
             <th>

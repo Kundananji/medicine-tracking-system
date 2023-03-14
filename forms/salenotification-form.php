@@ -63,6 +63,10 @@
                     <div class="m-3" id="medicines-found">
 
                     </div>
+					<hr>
+					 <div id="submit-feedback">
+					 
+					 </div>
 
                     <hr>
                       <input type="submit" class="btn btn-primary" name="action_submit" value="Submit"/>

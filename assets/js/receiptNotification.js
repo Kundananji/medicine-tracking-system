@@ -61,7 +61,7 @@ let submitForm = (e)=>{
     if(missing>0){
         return;
     }
-
+    $('#submit-feedback').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Submitting... please wait.</div>`);
   $.ajax({
       url:"ajax/save-receiptnotification.php",
       type:"post",
