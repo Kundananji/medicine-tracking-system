@@ -50,7 +50,7 @@ let submitForm = (e)=>{
           details:details,
       },
       success:(resp)=>{
-          if(resp && resp.status=="status"){
+          if(resp && resp.status=="success"){
               viewDamageNotificationMedicine();
           }else{;
               alert(resp.message);
@@ -74,12 +74,28 @@ let submitForm = (e)=>{
 
 } //end view function
 
-  let viewDamageNotificationMedicine=()=>{
+  let viewDamageNotificationMedicine=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+    if(data.damageNotificationId){        
+       $('#show-content-modal-body').html(loader);
+     }
+     else{
+       $('#page-content').html(loader);
+     }
       $.ajax({
           url:"ajax/view-damagenotificationmedicine.php",
           type:"get",
+          data:data,
           success:(resp)=>{
-              $('#page-content').html(resp);
+            if(data.damageNotificationId){
+                $('#showContentModal').modal('show');
+                $('#show-content-modal-body').html(resp);
+                $('#table-data-table').DataTable();
+              }
+              else{
+                $('#page-content').html(resp);
+                $('#table-data-table').DataTable();
+              }
           }
       })
 
