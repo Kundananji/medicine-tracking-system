@@ -41,7 +41,7 @@
                     </div>
                     <div class="form-group m-3">
                         <label for="location">Location</label>
-                        <input type="text"  id="location" class="form-control" name="location" placeholder="Enter Location"  required/>
+                        <input type="text"  id="location" onfocus="pickLocation(this)" class="form-control" name="location" placeholder="Enter Location"  required/>
                     </div>
                     <hr>
                     <h5>Add Medicines</h5>

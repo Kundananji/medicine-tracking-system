@@ -162,8 +162,7 @@ try {
  $transactionType = "Delivery";
  $dateOfTransaction = date("Y-m-d");
  $actors = [
-   array("userId" => $deliveredById, "roleName" => "Deliverer"),
-   array("userId" => $deliveredToId, "roleName" => "Receiver"),
+   array("userId" => $reportedbyId, "roleName" => "Reporter")
  ];
 
  $details = "Delivery of Medicine";
@@ -195,10 +194,11 @@ try {
   exit(json_encode(
     array(
       "status" => "success",
-      "message" => "Damage&nbsp;Notification added successfully"
+      "message" => "Damage Notification added successfully"
     )
   ));
 } catch (Exception $ex) {
+  print_r($ex);
   //roll back whatever has been done
   Database::getConnection()->query("ROLLBACK;");
   exit(json_encode(

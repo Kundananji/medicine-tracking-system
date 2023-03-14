@@ -32,6 +32,10 @@ if(sizeof($records) == 0){
             <th>
                 Location
             </th>
+
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>
