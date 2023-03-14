@@ -94,6 +94,9 @@ let submitForm = (e)=>{
           },
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('select').select2({
+                width:"resolve"
+              });
           }
       })
 

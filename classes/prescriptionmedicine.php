@@ -4,7 +4,6 @@ class PrescriptionMedicine{
   private $prescriptionId;
   private $medicineId;
   private $quantity;
-  private $amount;
   private $dosage;
 
 //Constructor function, creates a new instance of prescriptionMedicine; 
@@ -22,7 +21,6 @@ function __construct($id=null){
                     $this->setPrescriptionId($row['Prescription_ID']);
                     $this->setMedicineId($row['Medicine_ID']);
                     $this->setQuantity($row['Quantity']);
-                    $this->setAmount($row['Amount']);
                     $this->setDosage($row['Dosage']);
                 }//end while
             }//end query check
@@ -32,6 +30,29 @@ function __construct($id=null){
         }//end id check
     }//end constructor
 
+/**
+* Function to records provided a particular prescription Id 
+* @return array of fetched records 
+*  
+**/
+function getRecordsByPrescriptionId($prescriptionId){
+  $records = [];//empty array of records
+      try{
+          $sql="SELECT * FROM prescription_medicine WHERE Prescription_ID=?";
+          $stmt=Database::getConnection()->prepare($sql);
+          $stmt->bind_param("i",$prescriptionId);
+          $stmt->execute();
+          $query = $stmt->get_result();
+          if($query){
+              while($row=$query->fetch_assoc()){
+                $records[]= new PrescriptionMedicine($row['ID']);
+              }//end while
+          }//end query check
+        }catch(Exception $exception){
+          throw $exception;
+        }//end catch
+      return $records;
+  }//end getAllRecords function
 
 /**
 * Function to fetch all records 
@@ -47,14 +68,7 @@ function getAllRecords(){
             $query = $stmt->get_result();
             if($query){
                 while($row=$query->fetch_assoc()){
-                    $mPrescriptionMedicine= new PrescriptionMedicine;
-                    $mPrescriptionMedicine->setId($row['ID']);
-                    $mPrescriptionMedicine->setPrescriptionId($row['Prescription_ID']);
-                    $mPrescriptionMedicine->setMedicineId($row['Medicine_ID']);
-                    $mPrescriptionMedicine->setQuantity($row['Quantity']);
-                    $mPrescriptionMedicine->setAmount($row['Amount']);
-                    $mPrescriptionMedicine->setDosage($row['Dosage']);
-                    $records[]=$mPrescriptionMedicine;
+                  $records[]= new PrescriptionMedicine($row['ID']);
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -64,17 +78,17 @@ function getAllRecords(){
     }//end getAllRecords function
 
 //function to create or edit instance of prescriptionMedicine
-function savePrescriptionMedicine($id,$prescriptionId,$medicineId,$quantity,$amount,$dosage){
+function savePrescriptionMedicine($id,$prescriptionId,$medicineId,$quantity,$dosage){
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `prescription_medicine`(`ID`,`Prescription_ID`,`Medicine_ID`,`Quantity`,`Amount`,`Dosage`) VALUES(?,?,?,?,?,?)";
+            $sql="INSERT INTO `prescription_medicine`(`ID`,`Prescription_ID`,`Medicine_ID`,`Quantity`,`Dosage`) VALUES(?,?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("iiiids",$id,$prescriptionId,$medicineId,$quantity,$amount,$dosage);
+            $stmt->bind_param("iiiis",$id,$prescriptionId,$medicineId,$quantity,$dosage);
         }else{
-            $sql="UPDATE `prescription_medicine` SET `Prescription_ID`=?,`Medicine_ID`=?,`Quantity`=?,`Amount`=?,`Dosage`=? WHERE ID=?";
+            $sql="UPDATE `prescription_medicine` SET `Prescription_ID`=?,`Medicine_ID`=?,`Quantity`=?,`Dosage`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("iiidsi",$prescriptionId,$medicineId,$quantity,$amount,$dosage,$id);
+            $stmt->bind_param("iiisi",$prescriptionId,$medicineId,$quantity,$dosage,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -111,9 +125,7 @@ function savePrescriptionMedicine($id,$prescriptionId,$medicineId,$quantity,$amo
           return $this->quantity;
       }
 
-    function getAmount(){
-          return $this->amount;
-      }
+
 
     function getDosage(){
           return $this->dosage;
@@ -140,9 +152,7 @@ function savePrescriptionMedicine($id,$prescriptionId,$medicineId,$quantity,$amo
       }
 
 
-    function setAmount($amount){
-          $this->amount=$amount;
-      }
+
 
 
     function setDosage($dosage){

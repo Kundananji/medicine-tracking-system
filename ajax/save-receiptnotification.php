@@ -190,7 +190,7 @@ try {
     )
   ));
 } catch (Exception $ex) {
-  print_r($ex);
+
   //roll back whatever has been done
   Database::getConnection()->query("ROLLBACK;");
   exit(json_encode(

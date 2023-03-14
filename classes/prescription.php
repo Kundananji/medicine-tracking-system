@@ -4,6 +4,7 @@ class Prescription{
   private $prescriptionDate;
   private $hospitalId;
   private $patientId;
+  private $location;
 
 //Constructor function, creates a new instance of prescription; 
 function __construct($id=null){
@@ -20,6 +21,7 @@ function __construct($id=null){
                     $this->setPrescriptionDate($row['Prescription_Date']);
                     $this->setHospitalId($row['Hospital_ID']);
                     $this->setPatientId($row['Patient_ID']);
+                    $this->setLocation($row['Location']);
                 }//end while
             }//end query check
           }catch(Exception $exception){
@@ -48,6 +50,7 @@ function getAllRecords(){
                     $mPrescription->setPrescriptionDate($row['Prescription_Date']);
                     $mPrescription->setHospitalId($row['Hospital_ID']);
                     $mPrescription->setPatientId($row['Patient_ID']);
+                    $mPrescription->setLocation($row['Location']);
                     $records[]=$mPrescription;
                 }//end while
             }//end query check
@@ -58,17 +61,17 @@ function getAllRecords(){
     }//end getAllRecords function
 
 //function to create or edit instance of prescription
-function savePrescription($id,$prescriptionDate,$hospitalId,$patientId){
+function savePrescription($id,$prescriptionDate,$hospitalId,$patientId,$location){
     try{
         //if id is null then we are saving a new record
         if((int)$id==0){
-            $sql="INSERT INTO `prescription`(`ID`,`Prescription_Date`,`Hospital_ID`,`Patient_ID`) VALUES(?,?,?,?)";
+            $sql="INSERT INTO `prescription`(`ID`,`Prescription_Date`,`Hospital_ID`,`Patient_ID`,`Location`) VALUES(?,?,?,?,?)";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("isii",$id,$prescriptionDate,$hospitalId,$patientId);
+            $stmt->bind_param("isiis",$id,$prescriptionDate,$hospitalId,$patientId,$location);
         }else{
-            $sql="UPDATE `prescription` SET `Prescription_Date`=?,`Hospital_ID`=?,`Patient_ID`=? WHERE ID=?";
+            $sql="UPDATE `prescription` SET `Prescription_Date`=?,`Hospital_ID`=?,`Patient_ID`=?,`Location`=? WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
-            $stmt->bind_param("siii",$prescriptionDate,$hospitalId,$patientId,$id);
+            $stmt->bind_param("siisi",$prescriptionDate,$hospitalId,$patientId,$location,$id);
         }//end id null check
         $stmt->execute();
         $stmt->store_result();
@@ -139,4 +142,24 @@ function savePrescription($id,$prescriptionDate,$hospitalId,$patientId){
 
 
 
+
+  /**
+   * Get the value of location
+   */ 
+  public function getLocation()
+  {
+    return $this->location;
+  }
+
+  /**
+   * Set the value of location
+   *
+   * @return  self
+   */ 
+  public function setLocation($location)
+  {
+    $this->location = $location;
+
+    return $this;
+  }
 }//end class

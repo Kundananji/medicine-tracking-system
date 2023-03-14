@@ -169,6 +169,9 @@ $mUserType = $userType->getUserByTypeId();
   <?php include('includes/js-scripts.php') ?>
 
   <script>
+
+    window.lastPickedLocation = null;
+
     let showLocation = (location) => {
       $('#pickLocationModal').modal('show');
       $('#alerting-area').html('');
@@ -187,6 +190,10 @@ $mUserType = $userType->getUserByTypeId();
       //initialize map to lusaka
 
       let currentPosition = new google.maps.LatLng(-15.416667, 28.283333);
+      if(window.lastPickedLocation){ //remember last picked location
+        currentPosition = window.lastPickedLocation;
+
+      }
       if (mLocation) {
         let locationParts = mLocation.split(",");
         currentPosition = new google.maps.LatLng(locationParts[0], locationParts[1]);

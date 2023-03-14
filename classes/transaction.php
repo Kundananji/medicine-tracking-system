@@ -196,7 +196,7 @@ function createTransaction($dateOfTransaction,
         $transactionMedicine = new TransactionMedicine();
         for ($i = 0 ; $i< sizeof($medicines); $i++ ) {
             $medicine = $medicines[$i];       
-            $savedTransactionMedicine = $transactionMedicine->saveTransactionMedicine(0,$createdTransaction->getId(),$medicine['id'],$medicine['details'],$medicine['quantity'],$medicine['amount']);
+            $savedTransactionMedicine = $transactionMedicine->saveTransactionMedicine(0,$createdTransaction->getId(),$medicine['id'],$medicine['details'],$medicine['quantity'],(isset($medicine['amount'])?$medicine['amount']:0));
             if($savedTransactionMedicine == null){
                 throw new Exception("Failed to save transaction medicine");
             }

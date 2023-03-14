@@ -40,8 +40,42 @@ function __construct($id=null){
     }//end constructor
 
 
+
 /**
+* Function to fetch all records of patients
+* @return array of fetched records 
 * Function to fetch all records 
+**/
+function getPatients(){
+  $records = [];//empty array of records
+      try{
+          $sql="SELECT * FROM user WHERE User_Type_ID IN(select ID FROM user_type WHERE Name ='Patient')";
+          $stmt=Database::getConnection()->prepare($sql);
+          $stmt->execute();
+          $query = $stmt->get_result();
+          if($query){
+              while($row=$query->fetch_assoc()){
+                  $mUser= new User;
+                  $mUser->setId($row['ID']);
+                  $mUser->setName($row['Name']);
+                  $mUser->setAddress($row['Address']);
+                  $mUser->setEmail($row['Email']);
+                  $mUser->setUsername($row['Username']);
+                  $mUser->setPassword($row['Password']);
+                  $mUser->setUserTypeId($row['User_Type_ID']);
+                  $mUser->setPublicKey($row['Public_Key']);
+                  $mUser->setIpAddress($row['IP_Address']);
+                  $records[]=$mUser;
+              }//end while
+          }//end query check
+        }catch(Exception $exception){
+          throw $exception;
+        }//end catch
+      return $records;
+  }//end getPatients function
+
+/**
+* Function to fetch all records of miners 
 * @return array of fetched records 
 * Function to fetch all records 
 **/
@@ -71,7 +105,7 @@ function getMiners(){
           throw $exception;
         }//end catch
       return $records;
-  }//end getAllRecords function
+  }//end getMiners function
 
 /**
 * Function to fetch all records 

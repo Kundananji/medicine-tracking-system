@@ -36,6 +36,7 @@ let submitForm = (e)=>{
         alert('Dosage is missing');
         return;
     }
+    
 
   $.ajax({
       url:"ajax/save-prescriptionmedicine.php",
@@ -69,17 +70,35 @@ let submitForm = (e)=>{
           },
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('select').select2({
+                width:"resolve"
+              });
           }
       })
 
 } //end view function
 
-  let viewPrescriptionMedicine=()=>{
+  let viewPrescriptionMedicine=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+    if(data.prescriptionId){        
+       $('#show-content-modal-body').html(loader);
+     }
+     else{
+       $('#page-content').html(loader);
+     }
       $.ajax({
           url:"ajax/view-prescriptionmedicine.php",
           type:"get",
+          data:data,
           success:(resp)=>{
+            if(data.prescriptionId){
+                $('#showContentModal').modal('show');
+                $('#show-content-modal-body').html(resp);
+                $('#table-data-table').DataTable();
+              }
+              else{
               $('#page-content').html(resp);
+              }
           }
       })
 
