@@ -78,7 +78,7 @@ require("../classes/user.php");
                     </div>
 
                     <hr>
-                    <div id="submit_notice_feedback">
+                    <div id="submit_feedback">
 
                     </div>
                     <input type="submit" class="btn btn-primary" name="action_submit" value="Submit" />

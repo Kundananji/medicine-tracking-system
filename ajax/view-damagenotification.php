@@ -12,14 +12,12 @@ if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');
 }
 ?>
-<table class="table table-bordered">
+<table class="table table-striped table-bordered" id="table-data-table">
     <thead>
         <tr>
             <th>
             </th>
-            <th>
-                ID
-            </th>
+
             <th>
                 Date of Notification
             </th>
@@ -47,9 +45,7 @@ if(sizeof($records) == 0){
           <td>
                <?php echo ++$rowCount;?>
           </td>
-          <td>
-              <?php echo $mDamageNotification->getId(); ?> 
-          </td>
+
           <td>
               <?php echo $mDamageNotification->getDateOfNotification(); ?> 
           </td>
@@ -59,8 +55,12 @@ if(sizeof($records) == 0){
           <td>
               <?php echo $mDamageNotification->getDetails(); ?> 
           </td>
+   
           <td>
-              <?php echo $mDamageNotification->getLocation(); ?> 
+              <a href="javascript:showLocation('<?php echo $mDamageNotification->getLocation(); ?>')"><i class="bi bi-geo-alt-fill"></i> View Location</a>
+          </td>
+          <td>
+              <a href="javascript:DamageNotificationMedicine.viewDamageNotificationMedicine({damageNotificationId: '<?php echo $mDamageNotification->getId(); ?> '})"><i class="bi bi-capsule-pill"></i> View Medicines</a>
           </td>
       </tr>
 <?php

@@ -1,9 +1,11 @@
 <?php
+session_start();
 require('../classes/database.php');
+require("../classes/user.php");
 require('../classes/deliverynotificationmedicine.php');
 require("../classes/deliverynotification.php");
 require("../classes/medicine.php");
-require("../classes/user.php");
+
 
 $deliveryNotificationId = isset($_GET['deliveryNotificationId']) ? trim(filter_var($_GET['deliveryNotificationId'], FILTER_SANITIZE_STRING)) : null;
 $deliveryNotificationMedicine = new DeliveryNotificationMedicine();

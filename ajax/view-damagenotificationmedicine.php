@@ -1,5 +1,7 @@
 <?php
+session_start();
 require('../classes/database.php');
+require("../classes/user.php");
 require('../classes/damagenotificationmedicine.php');
 require("../classes/damagenotification.php");
 require("../classes/medicine.php");
@@ -24,9 +26,7 @@ if (sizeof($records) == 0) {
             <th>
                 &nbsp;
             </th>
-            <th>
-                Damage Notification
-            </th>
+
             <th>
                 Medicine
             </th>
@@ -47,12 +47,8 @@ if (sizeof($records) == 0) {
                 <td>
                     <?php echo ++$rowCount; ?>
                 </td>
-                <td>
-                    <?php echo $mDamageNotificationMedicine->getId(); ?>
-                </td>
-                <td>
-                    <?php echo $mDamageNotificationMedicine->getDamageNotification(); ?>
-                </td>
+
+
                 <td>
                     <?php echo $mDamageNotificationMedicine->getMedicine(); ?>
                 </td>

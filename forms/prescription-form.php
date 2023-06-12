@@ -63,6 +63,9 @@ require("../classes/user.php");
           <div class="m-3" id="medicines-found">
 
           </div>
+          <div id="submit-feedback">
+
+          </div>
           <input type="submit" class="btn btn-primary" name="action_submit" value="Submit" />
         </form> <!-- end form-->
       </div> <!-- end column-->

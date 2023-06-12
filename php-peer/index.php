@@ -88,6 +88,10 @@ while (true) {
                 $blockchain->addBlock(new Block( time(), $transactionBlock)); 
                 echo"New Received Block has been added to blockchain\n";
             }
+            else
+            if($block->hash == $receivedBlock->hash ){
+                echo"New block already exists on current blockchain\n";
+            }
             else{
                 echo"Received block discarded because it is invalid\n";
             }

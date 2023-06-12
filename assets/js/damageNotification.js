@@ -100,12 +100,13 @@ $('#submit-feedback').html(`<div class="alert alert-warning"><i class="bi bi-hou
 } //end view function
 
   let viewDamageNotification=()=>{
-    $('#submit-feedback').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading ... please wait.</div>`);
+    $('#page-content').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Loading ... please wait.</div>`);
       $.ajax({
           url:"ajax/view-damagenotification.php",
           type:"get",
           success:(resp)=>{
               $('#page-content').html(resp);
+              $('#table-data-table').DataTable();
           }
       })
 

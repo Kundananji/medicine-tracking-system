@@ -272,6 +272,7 @@ let submitForm = (e)=>{
         alert('Manufacturer is missing');
         return;
     }
+    $('#submit-feedback').html(`<div class="alert alert-warning"><i class="bi bi-hourglass-split"> Submitting... please wait.</div>`);
 
   $.ajax({
       url:"ajax/save-medicine.php",
@@ -293,7 +294,9 @@ let submitForm = (e)=>{
           if(resp && resp.status=="status"){
               viewMedicine();
           }else{;
-              alert(resp.message);
+           
+              $('#submit-feedback').html(`<div class="alert alert-danger"><i class="bi bi-hourglass-split">${resp.message}</div>`);
+
           }
       }
   });
