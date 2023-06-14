@@ -29,9 +29,11 @@ class Blockchain implements JsonSerializable{
         return $this->chain!=null &&sizeof($this->chain)>0?$this->chain[count($this->chain) - 1]:null;
     }
 
-    public function addBlock($newBlock) {
+    public function addBlock($newBlock,$mine=true) {
         $newBlock->previousHash = $this->getLatestBlock()!=null? $this->getLatestBlock()->hash:null;
-        $newBlock->mineBlock($this->difficulty);
+        if($mine){ //if this block is not mined already
+            $newBlock->mineBlock($this->difficulty);
+        }
         $index = $this->chain == null?0:sizeof($this->chain);
         $newBlock->index = $index; //get last index of transaction
         array_push($this->chain, $newBlock);

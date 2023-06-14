@@ -18,7 +18,7 @@ class Block implements JsonSerializable{
     }
 
     public function calculateHash() {
-        return hash('sha256', $this->index . $this->previousHash . $this->timestamp . json_encode($this->data) . $this->nonce);
+        return hash('sha256', $this->index . $this->previousHash . $this->timestamp . preg_replace('/\s+/', '',json_encode($this->data)) . $this->nonce);
     }
 
     public function mineBlock($difficulty) {
