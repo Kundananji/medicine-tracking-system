@@ -74,12 +74,28 @@ let submitForm = (e)=>{
 
 } //end view function
 
-  let viewTransactionMedicine=()=>{
+  let viewTransactionMedicine=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+    if(data.transactionId){    
+        $('#showContentModal').modal('show');    
+       $('#show-content-modal-body').html(loader);
+     }
+     else{
+       $('#page-content').html(loader);
+     }
       $.ajax({
           url:"ajax/view-transactionmedicine.php",
           type:"get",
+          data:data,
           success:(resp)=>{
-              $('#page-content').html(resp);
+            if(data.transactionId){
+                $('#showContentModal').modal('show');
+                $('#show-content-modal-body').html(resp);
+                $('#table-data-table').DataTable();
+              }
+              else{
+                $('#page-content').html(resp);
+              }
           }
       })
 

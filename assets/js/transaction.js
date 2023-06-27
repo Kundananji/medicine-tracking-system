@@ -68,21 +68,70 @@ let submitForm = (e)=>{
 
 } //end view function
 
-  let viewTransaction=()=>{
+  let viewTransaction=(data)=>{
+    
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+    if(data && data.transactionId){        
+        $('#showTransactionModal').modal('show');
+        $('#show-transaction-modal-body').html(loader);
+     }
+     else{
+       $('#page-content').html(loader);
+     }
       $.ajax({
           url:"ajax/view-transaction.php",
           type:"get",
+          data:data,
           success:(resp)=>{
-              $('#page-content').html(resp);
+            if(data && data.transactionId){                
+                $('#show-transaction-modal-body').html(resp);
+                $('#table-data-table').DataTable();
+              }
+              else{
+                $('#page-content').html(resp);
+                $('#table-data-table').DataTable();
+              }
           }
       })
 
 } //end view function
 
+let traceOnMap=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+
+    $('#page-content').html(loader);
+     
+    $.ajax({
+        url:"ajax/trace-on-map.php",
+        type:"get",
+        data:data,
+        success:(resp)=>{
+            $('#page-content').html(resp);
+ 
+        }
+    })
+
+} //end view function
+
+let filterTransactions = () => {
+    let startDate = $('#startDate').val();
+    let endDate = $('#endDate').val();
+    let searchTerm = $('#searchTerm').val();
+  
+    viewTransaction({
+      startDate:startDate,
+      endDate: endDate,
+      searchTerm: searchTerm
+    });
+    
+  }
+
 return {
     addTransaction: addTransaction,
     viewTransaction: viewTransaction,
-    submitForm:submitForm
+    submitForm:submitForm,
+    traceOnMap:traceOnMap,
+    filterTransactions:filterTransactions
   };
 
 })(jQuery);

@@ -94,6 +94,61 @@ function getAllRecords(){
     }//end getAllRecords function
 
 
+
+/**
+* Function to search for particular transactions 
+* @return array of fetched records 
+**/
+function search($startDate,$endDate,$searchTerm){
+    $records = [];//empty array of records
+    if($startDate!=null && $endDate ==null){
+        $endDate = $startDate;
+    }
+    if($startDate == null && $endDate!=null){
+        $startDate = $endDate;
+    }
+        try{
+            $sql="SELECT * FROM `transaction` t WHERE 1";
+            if($startDate!=null){
+                $sql.= " AND Date_Of_Transaction BETWEEN ? AND ?  ";
+            }
+            if($searchTerm!=null){
+                $sql.=" AND (`Details` LIKE ? OR t.ID IN(SELECT tm.Transaction_ID FROM transaction_medicine tm INNER JOIN medicine m ON tm.Medicine_ID = m.Id WHERE t.ID = tm.Transaction_ID AND CONCAT(m.Name,m.Description,m.GTIN,m.Serial_Number,m.LOT_Number,m.Package_Details) LIKE ? ))";
+            }
+
+     
+            $stmt=Database::getConnection()->prepare($sql);
+            if($startDate!=null&& $searchTerm!=null){
+                $searchTerm="%$searchTerm%";
+                $stmt->bind_param("ssss",$startDate,$endDate,$searchTerm,$searchTerm);
+            }
+            if($startDate!=null&& $searchTerm==null){
+                $stmt->bind_param("ss",$startDate,$endDate);
+            }
+            if($startDate==null&& $searchTerm!=null){
+                $searchTerm="%$searchTerm%";
+                $stmt->bind_param("ss",$searchTerm,$searchTerm);
+            }
+            $stmt->execute();
+            $query = $stmt->get_result();
+            if($query){
+                while($row=$query->fetch_assoc()){
+                    $mTransaction= new Transaction;
+                    $mTransaction->setId($row['ID']);
+                    $mTransaction->setDateOfTransaction($row['Date_Of_Transaction']);
+                    $mTransaction->setDetails($row['Details']);
+                    $mTransaction->setLocation($row['Location']);
+                    $mTransaction->setTransactionTypeId($row['Transaction_Type_ID']);
+                    $records[]=$mTransaction;
+                }//end while
+            }//end query check
+          }catch(Exception $exception){
+            throw $exception;
+          }//end catch
+        return $records;
+    }//end getAllRecords function    
+
+
 /**
  * 
  * function to mark a transaction as synced witht the blockchain network

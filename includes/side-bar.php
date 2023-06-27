@@ -221,14 +221,14 @@
         <ul id="reports-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
    
           <li>
-            <a href="javascript:void(0)" onclick="">
+            <a href="javascript:void(0)" onclick="Transaction.viewTransaction()">
               <i class="bi bi-circle"></i><span>View Transactions</span>
             </a>
           </li>
     
   
           <li>
-            <a href="javascript:void(0)" onclick="">
+            <a href="javascript:void(0)" onclick="Transaction.traceOnMap()">
               <i class="bi bi-circle"></i><span>Trace on Map</span>
             </a>
           </li>

@@ -8,7 +8,7 @@
   <i class="bi bi-list toggle-sidebar-btn"></i>
 </div><!-- End Logo -->
 
-<div class="search-bar">
+<div class="search-bar d-none">
   <form class="search-form d-flex align-items-center" method="POST" action="#">
     <input type="text" name="query" placeholder="Search" title="Enter search keyword">
     <button type="submit" title="Search"><i class="bi bi-search"></i></button>
@@ -26,7 +26,7 @@
     <li class="nav-item dropdown pe-3">
 
       <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+        <img src="assets/img/placeholder.png" alt="Profile" class="rounded-circle">
         <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $name;?></span>
       </a><!-- End Profile Iamge Icon -->
 

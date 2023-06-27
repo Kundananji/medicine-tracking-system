@@ -1,13 +1,16 @@
 <?php
- require('../classes/database.php');
- require('../classes/transactionactor.php');
-  require("../classes/user.php");
-  require("../classes/transactionrole.php");
-
+include('../includes/autoload.php');
 
 $transactionActor = new TransactionActor();
+
+$transactionId = isset($_GET['transactionId']) ? trim($_GET['transactionId']) : null;
+if (isset($transactionId)) {
+    //select medicine under a particular sale notificaiton
+    $records = $transactionActor->getRecordsByTransactionId($transactionId);
+} else {
 // fetch all records from database
 $records = $transactionActor->getAllRecords();
+}
 
 if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');

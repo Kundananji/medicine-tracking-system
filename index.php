@@ -10,7 +10,6 @@ include('classes/user-type.php');
 $userType = new userType($userTypeId);
 $mUserType = $userType->getUserByTypeId();
 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +36,7 @@ $mUserType = $userType->getUserByTypeId();
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
-  
+
   <style>
     #map {
       width: 100%;
@@ -104,7 +103,36 @@ $mUserType = $userType->getUserByTypeId();
     <section class="section dashboard">
       <div class="row">
         <div class="col table-responsive" id="page-content">
-          <p>Welcome to the Medicine Tracking System. A system that allows you track medicne through the medical supply chain from the manufacturer to the customer.</p>
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <img src="assets/img/mts.jpg" style="width: 100%;" class="img img-fluid rounded">
+
+            </div>
+            <div class="col-sm-12 col-md-6">
+
+              <p>Welcome to the Medicine Tracking System, your trusted solution for effectively monitoring and managing medicine throughout the entire medical supply chain. Our innovative platform empowers you to track medications from the moment they are produced by the manufacturer until they reach the hands of the end customer.</p>
+
+              <p>With the ever-growing complexity of the pharmaceutical industry, ensuring the safety and integrity of medicines is of paramount importance. Our system is designed to address this critical need by providing real-time visibility and traceability throughout the entire supply chain. By leveraging advanced technologies such as blockchain, IoT (Internet of Things), and secure data encryption, we offer a robust and reliable solution that instills confidence in the pharmaceutical ecosystem.</p>
+
+              <p>Here are some key reasons why you should choose our Medicine Tracking System:</p>
+
+              <ul>
+                <li>Enhanced Safety and Quality Control.</li>
+
+                <li>Efficient Supply Chain Management.</li>
+
+                <li>Regulatory Compliance Made Easy.</li>
+
+                <li>Trust and Transparency.</li>
+
+                <li>Customer Empowerment.</li>
+
+                <li>Scalable and Future-Ready.</li>
+              </ul>
+
+
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -113,6 +141,27 @@ $mUserType = $userType->getUserByTypeId();
 
   <!-- ======= Footer ======= -->
   <?php include('includes/footer.php'); ?>
+
+
+
+
+  <!-- modal: show transaction -->
+  <div class="modal fade" id="showTransactionModal" aria-labelledby="showTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="showTransactionModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-responsive" id="show-transaction-modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <!-- modal: show content -->
@@ -132,6 +181,7 @@ $mUserType = $userType->getUserByTypeId();
       </div>
     </div>
   </div>
+
 
 
 
@@ -169,7 +219,6 @@ $mUserType = $userType->getUserByTypeId();
   <?php include('includes/js-scripts.php') ?>
 
   <script>
-
     window.lastPickedLocation = null;
 
     let showLocation = (location) => {
@@ -190,7 +239,7 @@ $mUserType = $userType->getUserByTypeId();
       //initialize map to lusaka
 
       let currentPosition = new google.maps.LatLng(-15.416667, 28.283333);
-      if(window.lastPickedLocation){ //remember last picked location
+      if (window.lastPickedLocation) { //remember last picked location
         currentPosition = window.lastPickedLocation;
 
       }
@@ -208,13 +257,13 @@ $mUserType = $userType->getUserByTypeId();
 
       currentMarker = null;
 
-     if(!mLocation){ //only listen for location chances if mLocation is not defined
+      if (!mLocation) { //only listen for location chances if mLocation is not defined
 
-      // This event listener calls addMarker() when the map is clicked.
-      google.maps.event.addListener(map, "click", (event) => {
-        addMarker(event.latLng, map);
-      });
-    }
+        // This event listener calls addMarker() when the map is clicked.
+        google.maps.event.addListener(map, "click", (event) => {
+          addMarker(event.latLng, map);
+        });
+      }
 
       // Add a marker at the center of the map.
       addMarker(currentPosition, map);

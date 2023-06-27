@@ -26,6 +26,12 @@
   <script src="assets/js/deliveryNotificationMedicine.js"></script>
   <script src="assets/js/prescriptionMedicine.js"></script>
 
+  <!-- transactions -->
+  <script src="assets/js/transaction.js"></script>
+  <script src="assets/js/transactionMedicine.js"></script>
+  <script src="assets/js/transactionActor.js"></script>
+  <script src="assets/js/tracer.js"></script>
+
   <script src="assets/js/user.js"></script>
   <script src="assets/js/mine.js"></script>
   <script src="assets/js/logout.js"></script>

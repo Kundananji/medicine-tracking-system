@@ -29,9 +29,9 @@ class Blockchain implements JsonSerializable{
         return $this->chain!=null &&sizeof($this->chain)>0?$this->chain[count($this->chain) - 1]:null;
     }
 
-    public function addBlock($newBlock,$mine=true) {
+    public function addBlock($newBlock,$mined=true) {
         $newBlock->previousHash = $this->getLatestBlock()!=null? $this->getLatestBlock()->hash:null;
-        if($mine){ //if this block is not mined already
+        if(!$mined){ //if this block is not mined already
             $newBlock->mineBlock($this->difficulty);
         }
         $index = $this->chain == null?0:sizeof($this->chain);
@@ -57,10 +57,12 @@ class Blockchain implements JsonSerializable{
             $previousBlock = $this->chain[$i - 1];
 
             if ($currentBlock->hash !== $currentBlock->calculateHash()) {
+                echo "Block '$currentBlock->index' hash '$currentBlock->hash' is not computed correctly. It's supposed to be '$currentBlock->calculateHash()'\n";
                 return false;
             }
 
             if ($currentBlock->previousHash !== $previousBlock->hash) {
+                echo "Block '$currentBlock->index' hash '$currentBlock->hash' is not equal to previous hash '$previousBlock->hash' of block '$previousBlock->index'\n";
                 return false;
             }
         }
