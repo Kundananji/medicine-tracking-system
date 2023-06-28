@@ -95,7 +95,22 @@ let User = (function ($) {
              }
          })
    
-   } //end view function
+   } //end add user function
+
+
+   let updateMiningDetails=(id)=>{
+    $.ajax({
+        url:"forms/user-form-mining.php",
+        type:"get",
+        data:{
+            id:id
+        },
+        success:(resp)=>{
+            $('#page-content').html(resp);
+        }
+    })
+
+} //end update mining details function
    
      let viewUser=()=>{
          $.ajax({
@@ -106,12 +121,13 @@ let User = (function ($) {
              }
          })
    
-   } //end view function
+   } //end view User function
    
    return {
        addUser: addUser,
        viewUser: viewUser,
-       submitForm:submitForm
+       submitForm:submitForm,
+       updateMiningDetails:updateMiningDetails
      };
    
    })(jQuery);

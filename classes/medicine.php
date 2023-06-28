@@ -85,6 +85,47 @@ class Medicine implements \JsonSerializable
 
 
 
+  
+  /**
+  * Function to fetch all records  by the given user Id
+  * @return array of fetched records 
+  *
+  **/
+  function getAllRecordsByUserId($userId)
+  {
+    $records = []; //empty array of records
+    try {
+      $sql = "SELECT * FROM medicine WHERE 1 AND Manufacturer_ID=? ";
+      $stmt = Database::getConnection()->prepare($sql);
+      $stmt->bind_param("i",$userId);
+      $stmt->execute();
+      $query = $stmt->get_result();
+      if ($query) {
+        while ($row = $query->fetch_assoc()) {
+          $mMedicine = new Medicine;
+          $mMedicine->setId($row['ID']);
+          $mMedicine->setName($row['Name']);
+          $mMedicine->setDescription($row['Description']);
+          $mMedicine->setManufacturedDate($row['Manufactured_Date']);
+          $mMedicine->setExpiryDate($row['Expiry_Date']);
+          $mMedicine->setGtin($row['GTIN']);
+          $mMedicine->setSerialNumber($row['Serial_Number']);
+          $mMedicine->setLotNumber($row['LOT_Number']);
+          $mMedicine->setPackageDetails($row['Package_Details']);
+          $mMedicine->setManufacturerId($row['Manufacturer_ID']);
+          $mMedicine->setManufacturer($row['Manufacturer_ID']);
+          $records[] = $mMedicine;
+        } //end while
+      } //end query check
+    } catch (Exception $exception) {
+      throw $exception;
+    } //end catch
+    return $records;
+  } //end getAllRecordsByUserId function
+
+
+
+
   /**
    * Function to fetch all records 
    * @return array of fetched records 

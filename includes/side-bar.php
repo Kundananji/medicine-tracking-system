@@ -229,7 +229,13 @@
   
           <li>
             <a href="javascript:void(0)" onclick="Transaction.traceOnMap()">
-              <i class="bi bi-circle"></i><span>Trace on Map</span>
+              <i class="bi bi-circle"></i><span>View On Map</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="javascript:void(0)" onclick="Transaction.traceMedicine()">
+              <i class="bi bi-circle"></i><span>Trace Medicine</span>
             </a>
           </li>
    
@@ -254,8 +260,8 @@
         <ul id="mine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
   
           <li>
-            <a href="javascript:void(0)" onclick="User.addUser()">
-              <i class="bi bi-person"></i><span>Update Account Details</span>
+            <a href="javascript:void(0)" onclick="User.updateMiningDetails()">
+              <i class="bi bi-person"></i><span>Update Mining Details</span>
             </a>
           </li>
 

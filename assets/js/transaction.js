@@ -113,6 +113,46 @@ let traceOnMap=(data)=>{
 
 } //end view function
 
+let traceMedicine=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+
+    $('#page-content').html(loader);
+     
+    $.ajax({
+        url:"ajax/trace-medicine.php",
+        type:"get",
+        data:data,
+        success:(resp)=>{
+            $('#page-content').html(resp);
+ 
+        }
+    })
+
+} //end view function
+
+
+
+/**
+ * Function to trace a particular medicine 
+ */
+let viewTrace=(data)=>{
+    let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
+
+    $('#showTransactionModal').modal('show');
+    $('#show-transaction-modal-body').html(loader);
+     
+    $.ajax({
+        url:"ajax/view-medicine-trace.php",
+        type:"get",
+        data:data,
+        success:(resp)=>{
+            $('#show-transaction-modal-body').html(resp);
+ 
+        }
+    })
+
+} //end view function
+
 let filterTransactions = () => {
     let startDate = $('#startDate').val();
     let endDate = $('#endDate').val();
@@ -131,7 +171,9 @@ return {
     viewTransaction: viewTransaction,
     submitForm:submitForm,
     traceOnMap:traceOnMap,
-    filterTransactions:filterTransactions
+    filterTransactions:filterTransactions,
+    traceMedicine:traceMedicine,
+    viewTrace:viewTrace
   };
 
 })(jQuery);

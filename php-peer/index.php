@@ -38,8 +38,7 @@ $listener = $runtime->run(function () {
         echo "Server listening on $host:$port\n";
 
     //listening loop
-    while (true) {
-    
+    while (true) {    
 
         $blockchain = new Blockchain();
 
@@ -142,9 +141,10 @@ $listener = $runtime->run(function () {
                     echo "Received blockchain is not longer than local. Discarded.\n";
                 }
             }
+            // Close the client connection when you're done
+            fclose($client);
         }
-        // Close the client connection when you're done
-        fclose($client);
+
     }
 
     return "done";

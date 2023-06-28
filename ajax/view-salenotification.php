@@ -1,12 +1,15 @@
 <?php
+session_start();
  require('../classes/database.php');
  require('../classes/salenotification.php');
-  require("../classes/user.php");
+ require("../classes/user.php");
+
+ $userId =$_SESSION['userId'];
 
 
 $saleNotification = new SaleNotification();
 // fetch all records from database
-$records = $saleNotification->getAllRecords();
+$records = $saleNotification->getAllRecordsByUserId($userId);
 
 if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');

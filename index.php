@@ -236,64 +236,76 @@ $mUserType = $userType->getUserByTypeId();
 
     let loadMap = (obj, mLocation) => {
 
-      //initialize map to lusaka
+// Initialize map to Lusaka
+let currentPosition = new google.maps.LatLng(-15.416667, 28.283333);
 
-      let currentPosition = new google.maps.LatLng(-15.416667, 28.283333);
-      if (window.lastPickedLocation) { //remember last picked location
-        currentPosition = window.lastPickedLocation;
+if (window.lastPickedLocation) {
+  // Remember last picked location
+  currentPosition = window.lastPickedLocation;
+}
 
+if (!mLocation) {
+  // Get user's current location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        initializeMap(currentPosition);
+      },
+      (error) => {
+        console.log(error);
+        initializeMap(currentPosition);
       }
-      if (mLocation) {
-        let locationParts = mLocation.split(",");
-        currentPosition = new google.maps.LatLng(locationParts[0], locationParts[1]);
-      }
+    );
+  } else {
+    initializeMap(currentPosition);
+  }
+} else {
+  let locationParts = mLocation.split(",");
+  currentPosition = new google.maps.LatLng(locationParts[0], locationParts[1]);
+  initializeMap(currentPosition);
+}
 
-      var mapProp = {
-        center: currentPosition,
-        zoom: 8,
-      };
+function initializeMap(position) {
+  var mapProp = {
+    center: position,
+    zoom: 8,
+  };
 
-      var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+  var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-      currentMarker = null;
+  currentMarker = null;
 
-      if (!mLocation) { //only listen for location chances if mLocation is not defined
+  if (!mLocation) {
+    // Only listen for location changes if mLocation is not defined
+    google.maps.event.addListener(map, "click", (event) => {
+      addMarker(event.latLng, map);
+    });
+  }
 
-        // This event listener calls addMarker() when the map is clicked.
-        google.maps.event.addListener(map, "click", (event) => {
-          addMarker(event.latLng, map);
-        });
-      }
+  // Add a marker at the center of the map.
+  addMarker(position, map);
 
-      // Add a marker at the center of the map.
-      addMarker(currentPosition, map);
-
-
-      // Adds a marker to the map.
-      function addMarker(location, map) {
-        if (currentMarker) {
-          currentMarker.setMap(null);
-        }
-        // Add the marker at the clicked location
-        currentMarker = new google.maps.Marker({
-          position: location,
-          map: map,
-
-        });
-
-
-        if (obj) {
-          var mLocation = location.toJSON();
-          obj.value = mLocation.lat + "," + mLocation.lng;
-          //$('#pickLocationModal').modal('hide');
-
-        }
-      }
-
-
-
-
+  // Adds a marker to the map.
+  function addMarker(location, map) {
+    if (currentMarker) {
+      currentMarker.setMap(null);
     }
+    
+    // Add the marker at the clicked location
+    currentMarker = new google.maps.Marker({
+      position: location,
+      map: map,
+    });
+
+    if (obj) {
+      var mLocation = location.toJSON();
+      obj.value = mLocation.lat + "," + mLocation.lng;
+    }
+  }
+}
+};
+
   </script>
 
   <!-- Google map -->

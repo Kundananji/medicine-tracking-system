@@ -1,5 +1,6 @@
 <?php
 session_start();
+$userId =$_SESSION['userId'];
 require('../classes/database.php');
 require('../classes/medicine.php');
 require("../classes/user.php");
@@ -7,7 +8,7 @@ require("../classes/user.php");
 
 $medicine = new Medicine();
 // fetch all records from database
-$records = $medicine->getAllRecords();
+$records = $medicine->getAllRecordsByUserId($userId);
 
 if (sizeof($records) == 0) {
     exit('<div class="alert alert-warning">No records available.</div>');

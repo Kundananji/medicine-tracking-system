@@ -1,5 +1,6 @@
 <?php
   session_start();
+  $userId =$_SESSION['userId'];
   require("../classes/database.php");
   require("../classes/medicine.php");
   require("../classes/user.php");
@@ -52,18 +53,11 @@
                         <label for="packageDetails">Package Details</label>
                         <input type="text"  id="packageDetails" class="form-control" name="packageDetails" placeholder="Enter Package Details" value="<?php echo $medicine!=null?$medicine->getPackageDetails():'';?>" required/>
                     </div>
-                    <div class="form-group m-3">
-                        <label for="manufacturerId">Manufacturer</label>
-                         <select class="form-control" name="manufacturerId" id="manufacturerId">
-                        <?php
-                            $user = new Manufacturer();
-                            $records =$user->getUsers();
-                            foreach($records as $mUser){
-                                 echo'<option value="'.$mUser->getId().'" '.( $medicine!=null && $medicine->getManufacturerId() == $mUser->getId()?" selected":'').'>'.$mUser->getName().'</option>';
-                               }
-                         ?>
-                         </select>
-                    </div>
+  
+                      
+                         <input type="hidden" name="manufacturerId" id="manufacturerId" value="<?php echo $userId;?>">
+                        
+                  
                       <input type="submit" class="btn btn-primary" name="action_submit" value="Submit"/>
                   </form> <!-- end form-->
            </div> <!-- end column-->

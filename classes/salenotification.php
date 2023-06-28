@@ -34,7 +34,37 @@ function __construct($id=null){
 /**
 * Function to fetch all records 
 * @return array of fetched records 
+* 
+**/
+function getAllRecordsByUserId($userId){
+  $records = [];//empty array of records
+      try{
+          $sql="SELECT * FROM sale_notification WHERE 1 AND Seller_ID=? ";
+          $stmt=Database::getConnection()->prepare($sql);
+          $stmt->bind_param("i",$userId);
+          $stmt->execute();
+          $query = $stmt->get_result();
+          if($query){
+              while($row=$query->fetch_assoc()){
+                  $mSaleNotification= new SaleNotification;
+                  $mSaleNotification->setId($row['ID']);
+                  $mSaleNotification->setDateOfSale($row['Date_Of_Sale']);
+                  $mSaleNotification->setBuyerId($row['Buyer_ID']);
+                  $mSaleNotification->setSellerId($row['Seller_ID']);
+                  $mSaleNotification->setLocation($row['Location']);
+                  $records[]=$mSaleNotification;
+              }//end while
+          }//end query check
+        }catch(Exception $exception){
+          throw $exception;
+        }//end catch
+      return $records;
+  }//end getAllRecords function
+
+/**
 * Function to fetch all records 
+* @return array of fetched records 
+* 
 **/
 function getAllRecords(){
     $records = [];//empty array of records
