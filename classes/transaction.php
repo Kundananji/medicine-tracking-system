@@ -72,7 +72,7 @@ function getPendingRecords($limit=1){
 function getAllRecords(){
     $records = [];//empty array of records
         try{
-            $sql="SELECT * FROM transaction WHERE 1";
+            $sql="SELECT * FROM transaction WHERE 1 AND `valid` =1";
             $stmt=Database::getConnection()->prepare($sql);
             $stmt->execute();
             $query = $stmt->get_result();
@@ -108,7 +108,7 @@ function search($startDate,$endDate,$searchTerm){
         $startDate = $endDate;
     }
         try{
-            $sql="SELECT * FROM `transaction` t WHERE 1";
+            $sql="SELECT * FROM `transaction` t WHERE 1 AND `synced`=1 ";
             if($startDate!=null){
                 $sql.= " AND Date_Of_Transaction BETWEEN ? AND ?  ";
             }
@@ -161,6 +161,28 @@ function markAsSynced(){
             $sql="UPDATE `transaction` SET `Synced`=1 WHERE ID=?";
             $stmt=Database::getConnection()->prepare($sql);
             $stmt->bind_param("i",$this->id);
+        
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->close();
+        return new Transaction($this->id); 
+    }catch(Exception $exception){
+        throw $exception;
+    }
+}//end sync function
+
+/**
+ * 
+ * function to mark a transaction as valid against the blockchain network
+ * 
+ */
+
+ function markAsValid($valid){
+    try{
+
+            $sql="UPDATE `transaction` SET `Valid`=?, `Synced`=1 WHERE ID=?";
+            $stmt=Database::getConnection()->prepare($sql);
+            $stmt->bind_param("ii",$valid,$this->id);
         
         $stmt->execute();
         $stmt->store_result();

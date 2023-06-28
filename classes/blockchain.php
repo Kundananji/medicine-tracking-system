@@ -48,7 +48,7 @@ class Blockchain implements JsonSerializable{
         fwrite($handle,json_encode($this->chain));
         fclose($handle);
 
-        echo "Adding new block to blockchain ___ $this->chain\n";
+        echo "Adding new block to blockchain ___ \n";
     }
 
     public function isValid() {

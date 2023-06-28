@@ -7,6 +7,7 @@
             e.preventDefault();
             let username = $('#yourUsername').val();
             let password = $('#yourPassword').val();
+            let rememberMe = $('#rememberMe').checked;
 
             if(!username){
         
@@ -42,6 +43,7 @@
                 data:{
                     username:username,
                     password:password,
+                    rememberMe:rememberMe
 
                 },
                 success:(resp)=>{

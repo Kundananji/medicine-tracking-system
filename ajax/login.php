@@ -5,6 +5,7 @@ include('../classes/login.php');
 
 $username = isset($_POST['username'])?trim($_POST['username']):null;
 $password = isset($_POST['password'])?trim($_POST['password']):null;
+$rememberMe = isset($_POST['password'])?trim($_POST['password']):null;
 
 if(empty($username)){
     exit(json_encode(array(
