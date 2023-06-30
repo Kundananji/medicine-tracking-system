@@ -1,5 +1,6 @@
 <?php
 session_start();
+$userId =$_SESSION['userId'];
 require('../classes/database.php');
 require('../classes/deliverynotification.php');
 require("../classes/user.php");
@@ -7,7 +8,7 @@ require("../classes/user.php");
 
 $deliveryNotification = new DeliveryNotification();
 // fetch all records from database
-$records = $deliveryNotification->getAllRecords();
+$records = $deliveryNotification->getAllRecords($userId);
 
 if (sizeof($records) == 0) {
     exit('<div class="alert alert-warning">No records available.</div>');

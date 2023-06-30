@@ -13,6 +13,9 @@
 
 
   <li class="nav-item">
+  <?php
+           if($mUserType->getCanAddMedicine() ||$mUserType->getCanViewMedicine() ){
+          ?>
         <a class="nav-link collapsed" data-bs-target="#medicine-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-menu-button-wide"></i><span>Medicines</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -42,7 +45,9 @@
 
         </ul>
       </li><!-- End Medicines Nav -->
-
+      <?php
+           }
+          ?>
       <?php
            if($mUserType->getCanSale()){
           ?>

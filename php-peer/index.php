@@ -36,19 +36,24 @@ $listener = $runtime->run(function () {
             die("Failed to create socket: $errorMessage");
         }
         echo "Server listening on $host:$port\n";
-
+    // Set the stream to non-blocking mode
+    stream_set_blocking($server, 0);
     //listening loop
+    $count = 0;
     while (true) {    
-
+        $count+=1;
         $blockchain = new Blockchain();
+        echo "Listinging $count .... \n";
 
-        echo "Waiting for client to connect\n\n";
-        $client = stream_socket_accept($server);
+        echo "Waiting for client to connect...\n\n";
+        $client = stream_socket_accept($server,-1);
         //wait for a moment for client to connect
-        if ($client) {
+        if ($client!==false) {
             echo "New client connected to PHP server\n\n";
             $data = stream_get_contents($client); // read incoming data from client
             $transaction = json_decode($data, true); // decode transaction data from JSON
+
+            if($data!=null){
 
             echo "Received Data from Client: $data\n\n";
             //type of data received can be a block, or a whole blockchain  
@@ -141,9 +146,13 @@ $listener = $runtime->run(function () {
                     echo "Received blockchain is not longer than local. Discarded.\n";
                 }
             }
-            // Close the client connection when you're done
-            fclose($client);
         }
+  
+        }
+        // Close the client connection when you're done
+        fclose($client);
+
+        //sleep(5);//sleep for 5 seconds to avoid excessive cbu usage
 
     }
 

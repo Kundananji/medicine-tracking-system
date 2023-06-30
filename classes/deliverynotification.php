@@ -36,11 +36,17 @@ function __construct($id=null){
 * @return array of fetched records 
 * Function to fetch all records 
 **/
-function getAllRecords(){
+function getAllRecords($userId=null){
     $records = [];//empty array of records
         try{
             $sql="SELECT * FROM delivery_notification WHERE 1";
+            if($userId!=null){
+              $sql.=" AND Delivered_By_ID = ?";
+            }
             $stmt=Database::getConnection()->prepare($sql);
+            if($userId!=null){
+              $stmt->bind_param("i",$userId);
+            }
             $stmt->execute();
             $query = $stmt->get_result();
             if($query){

@@ -1,12 +1,12 @@
 <?php
- require('../classes/database.php');
- require('../classes/receiptnotification.php');
-  require("../classes/user.php");
-
+session_start();
+$userId =$_SESSION['userId'];
+include('../includes/autoload.php');
+$user = new User($userId);
 
 $receiptNotification = new ReceiptNotification();
 // fetch all records from database
-$records = $receiptNotification->getAllRecords();
+$records = $receiptNotification->getAllRecords($userId);
 
 if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');

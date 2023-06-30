@@ -37,9 +37,7 @@ if(sizeof($records) == 0){
             <th>
                 Location
             </th>
-            <th>
-                Medicine
-            </th>
+
             <th>
                 Actors
             </th>
@@ -80,7 +78,7 @@ if(sizeof($records) == 0){
               ?> 
           </td>
           <td>
-              <?php echo $mTransaction->getId(); ?> 
+          <a href="javascript:Transaction.viewTransaction({transactionId:'<?php echo $mTransaction->getId(); ?>'})"> <?php echo $mTransaction->getId(); ?> </a>
           </td>
 
           <td>
@@ -91,9 +89,7 @@ if(sizeof($records) == 0){
           <td>
               <a href="javascript:showLocation('<?php echo $mTransaction->getLocation(); ?>')"><i class="bi bi-geo-alt-fill"></i> View Location</a>
           </td>
-          <td>
-              <a href="javascript:TransactionMedicine.viewTransactionMedicine({transactionId: '<?php echo $mTransaction->getId(); ?> '})"><i class="bi bi-capsule-pill"></i> View Medicines</a>
-          </td>
+
           <td>
               <a href="javascript:TransactionActor.viewTransactionActor({transactionId: '<?php echo $mTransaction->getId(); ?>'})"><i class="bi bi-people"></i> View Actors</a>
           </td>

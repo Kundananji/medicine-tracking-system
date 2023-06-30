@@ -1,16 +1,23 @@
 <?php
+session_start();
+$userId =$_SESSION['userId'];
 include('../includes/autoload.php');
+$user = new User($userId);
+$searchId = null;
+if($user->getUserType()->getName() != "Regulator" && $user->getUserType()->getName() != "Miner" ){
+    $searchId = $userId;
+}
 
 $transaction = new Transaction();
 if(isset($_GET['searchTerm']) || isset($_GET['startDate']) || isset($_GET['endDate'])){
   $searchTerm = isset($_GET['searchTerm'])?$_GET['searchTerm']:null;
   $startDate = isset($_GET['startDate'])?$_GET['startDate']:null;
   $endDate = isset($_GET['endDate'])?$_GET['endDate']:null;
-  $records = $transaction->search($startDate,$endDate,$searchTerm);
+  $records = $transaction->search($startDate,$endDate,$searchTerm,$searchId);
 }
 else{
 // fetch all records from database
-$records = $transaction->getAllRecords();
+$records = $transaction->getAllRecords($searchId);
 }
 
 if(sizeof($records) == 0){

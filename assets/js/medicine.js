@@ -231,11 +231,12 @@ let submitForm = (e)=>{
     let lotNumber= $('#lotNumber').val();
     let packageDetails= $('#packageDetails').val();
     let manufacturerId= $('#manufacturerId').val();
-
+     /*
     if(id==null || id==""){
         alert('ID is missing');
         return;
     }
+    */
     if(name==null || name==""){
         alert('Name is missing');
         return;
@@ -291,11 +292,11 @@ let submitForm = (e)=>{
           manufacturerId:manufacturerId,
       },
       success:(resp)=>{
-          if(resp && resp.status=="status"){
+          if(resp && resp.status=="success"){
               viewMedicine();
           }else{;
            
-              $('#submit-feedback').html(`<div class="alert alert-danger"><i class="bi bi-hourglass-split">${resp.message}</div>`);
+              $('#submit-feedback').html(`<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill">${resp.message}</div>`);
 
           }
       }

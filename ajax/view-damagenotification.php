@@ -1,12 +1,11 @@
 <?php
- require('../classes/database.php');
- require('../classes/damagenotification.php');
-  require("../classes/user.php");
-
+  session_start();
+  $userId =$_SESSION['userId'];
+  include('../includes/autoload.php');
 
 $damageNotification = new DamageNotification();
 // fetch all records from database
-$records = $damageNotification->getAllRecords();
+$records = $damageNotification->getAllRecords($userId);
 
 if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');

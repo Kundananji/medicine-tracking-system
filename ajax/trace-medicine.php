@@ -3,12 +3,20 @@ session_start();
 include('../includes/autoload.php');
 
 $userId =$_SESSION['userId'];
+$user = new User($userId);
+$searchId =  null;
+if($user->getUserType()->getName() != "Regulator" && $user->getUserType()->getName() != "Miner" ){
+    $searchId = $userId;
+}
 
 $medicine = new Medicine();
 
 $records = [];
-
-$records = $medicine->getAllRecordsByUserId($userId);
+if($searchId==null){
+    $records = $medicine->getAllRecords();
+}else{
+    $records = $medicine->getAllRecordsByUserId($searchId);
+}
 
 
 

@@ -1,12 +1,12 @@
 <?php
- require('../classes/database.php');
- require('../classes/prescription.php');
-  require("../classes/user.php");
+session_start();
+$userId =$_SESSION['userId'];
+include('../includes/autoload.php');
 
 
 $prescription = new Prescription();
 // fetch all records from database
-$records = $prescription->getAllRecords();
+$records = $prescription->getAllRecords($userId);
 
 if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');

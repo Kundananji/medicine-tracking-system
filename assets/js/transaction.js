@@ -124,6 +124,7 @@ let traceMedicine=(data)=>{
         data:data,
         success:(resp)=>{
             $('#page-content').html(resp);
+            $('#table-data-table').DataTable();
  
         }
     })

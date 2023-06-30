@@ -1,5 +1,13 @@
 <?php
+session_start();
+$userId =$_SESSION['userId'];
 include('../includes/autoload.php');
+$user = new User($userId);
+$searchId = null;
+if($user->getUserType()->getName() != "Regulator" && $user->getUserType()->getName() != "Miner" ){
+    $searchId = $userId;
+}
+
 $transactionId = isset($_GET['transactionId']) ? trim($_GET['transactionId']) : null;
 
 $transaction = new Transaction($transactionId);
@@ -14,11 +22,11 @@ else{
         $searchTerm = isset($_GET['searchTerm'])?$_GET['searchTerm']:null;
         $startDate = isset($_GET['startDate'])?$_GET['startDate']:null;
         $endDate = isset($_GET['endDate'])?$_GET['endDate']:null;
-        $records = $transaction->search($startDate,$endDate,$searchTerm);
+        $records = $transaction->search($startDate,$endDate,$searchTerm,$searchId);
       }
       else{
       // fetch all records from database
-      $records = $transaction->getAllRecords();
+      $records = $transaction->getAllRecords($searchId);
       }
 }
 
@@ -27,7 +35,7 @@ if(sizeof($records) == 0){
   exit('<div class="alert alert-warning">No records available.</div>');
 }
 ?>
-<form class="row gx-3 gy-2 align-items-center m-2">
+<form class="row gx-3 gy-2 align-items-center m-3">
   <div class="col-sm-3">
     <label class="visually-hidden" for="startDate">Start Date</label>
     <input type="date" class="form-control" id="startDate" placeholder="Enter Start Date" <?php echo !isset($startDate)?(""):('value="'.$startDate.'"');?>>

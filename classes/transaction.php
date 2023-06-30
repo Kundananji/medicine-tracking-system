@@ -71,12 +71,22 @@ class Transaction
      * @return array of fetched records 
      * Function to fetch all records 
      **/
-    function getAllRecords()
+    function getAllRecords($userId=null)
     {
         $records = []; //empty array of records
         try {
-            $sql = "SELECT * FROM transaction WHERE 1 AND `valid` =1";
+            $sql = "SELECT * FROM `transaction` t WHERE 1 AND `valid` =1";
+            if($userId!=null){
+                $sql.=" AND (
+                    t.ID IN(SELECT Transaction_ID FROM `transaction_actor` WHERE User_ID=? )";
+                $sql.=" OR t.ID IN(SELECT tm.Transaction_ID FROM transaction_medicine tm INNER JOIN medicine m ON tm.Medicine_ID = m.Id WHERE t.ID = tm.Transaction_ID AND m.Manufacturer_ID =? )
+                    )";
+            }
             $stmt = Database::getConnection()->prepare($sql);
+            if($userId!=null){
+                $stmt->bind_param("ii",$userId,$userId);
+            }
+
             $stmt->execute();
             $query = $stmt->get_result();
             if ($query) {
@@ -102,7 +112,7 @@ class Transaction
      * Function to search for particular transactions 
      * @return array of fetched records 
      **/
-    function search($startDate, $endDate, $searchTerm)
+    function search($startDate, $endDate, $searchTerm,$userId=null)
     {
         $records = []; //empty array of records
         if ($startDate != null && $endDate == null) {
@@ -119,20 +129,43 @@ class Transaction
             if ($searchTerm != null) {
                 $sql .= " AND (`Details` LIKE ? OR t.ID IN(SELECT tm.Transaction_ID FROM transaction_medicine tm INNER JOIN medicine m ON tm.Medicine_ID = m.Id WHERE t.ID = tm.Transaction_ID AND CONCAT(m.Name,m.Description,m.GTIN,m.Serial_Number,m.LOT_Number,m.Package_Details) LIKE ? ))";
             }
+            if($userId!=null){
+                $sql.=" AND (
+                    t.ID IN(SELECT Transaction_ID FROM `transaction_actor` WHERE User_ID=? )";
+                $sql.=" OR t.ID IN(SELECT tm.Transaction_ID FROM transaction_medicine tm INNER JOIN medicine m ON tm.Medicine_ID = m.Id WHERE t.ID = tm.Transaction_ID AND m.Manufacturer_ID =? )
+                    )";
+            }
 
 
             $stmt = Database::getConnection()->prepare($sql);
+
             if ($startDate != null && $searchTerm != null) {
                 $searchTerm = "%$searchTerm%";
-                $stmt->bind_param("ssss", $startDate, $endDate, $searchTerm, $searchTerm);
+                if($userId == null){
+                    $stmt->bind_param("ssss", $startDate, $endDate, $searchTerm, $searchTerm);
+                }
+                else{
+                    $stmt->bind_param("ssssii", $startDate, $endDate, $searchTerm, $searchTerm,$userId,$userId);
+                }
             }
             if ($startDate != null && $searchTerm == null) {
-                $stmt->bind_param("ss", $startDate, $endDate);
+                if($userId == null){
+                    $stmt->bind_param("ss", $startDate, $endDate);
+                }
+                else{
+                    $stmt->bind_param("ssii", $startDate, $endDate,$userId,$userId);
+                }
             }
             if ($startDate == null && $searchTerm != null) {
                 $searchTerm = "%$searchTerm%";
-                $stmt->bind_param("ss", $searchTerm, $searchTerm);
+                if($userId == null){
+                    $stmt->bind_param("ss", $searchTerm, $searchTerm);
+                }
+                else{
+                    $stmt->bind_param("ssii", $searchTerm, $searchTerm,$userId,$userId);
+                }
             }
+
             $stmt->execute();
             $query = $stmt->get_result();
             if ($query) {
