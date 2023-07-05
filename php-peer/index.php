@@ -32,122 +32,138 @@ $listener = $runtime->run(function () {
     $host = 'localhost';
     $port = 8000;
     $server = stream_socket_server("tcp://0.0.0.0:$port", $errno, $errorMessage);
-        if ($server === false) {
-            die("Failed to create socket: $errorMessage");
-        }
-        echo "Server listening on $host:$port\n";
+    if ($server === false) {
+        die("Failed to create socket: $errorMessage");
+    }
+    echo "Server listening on $host:$port\n";
     // Set the stream to non-blocking mode
     stream_set_blocking($server, 0);
     //listening loop
     $count = 0;
-    while (true) {    
-        $count+=1;
+    while (true) {
+        $count += 1;
         $blockchain = new Blockchain();
-        echo "Listinging $count .... \n";
+        echo "Listening $count .... \n";
 
         echo "Waiting for client to connect...\n\n";
-        $client = stream_socket_accept($server,-1);
+        $client = stream_socket_accept($server, -1);
         //wait for a moment for client to connect
-        if ($client!==false) {
+        if ($client !== false) {
             echo "New client connected to PHP server\n\n";
-            $data = stream_get_contents($client); // read incoming data from client
-            $transaction = json_decode($data, true); // decode transaction data from JSON
+            //   $data = stream_get_contents($client); // read incoming data from client
 
-            if($data!=null){
+            stream_set_blocking($client, 0); // Set client stream to non-blocking mode
 
-            echo "Received Data from Client: $data\n\n";
-            //type of data received can be a block, or a whole blockchain  
+            $data = '';
+            $bufferSize = 1024; // Adjust the buffer size as needed
 
-            if ($transaction["type"] == "block") {
+            while (($chunk = fread($client, $bufferSize)) !== false) {
+                $data .= $chunk;
 
-                echo "Received block from network.\n";
-
-                $mBlock = $transaction['data'];
-
-                $receivedBlock = new Block();
-
-                $receivedBlock->index = $mBlock['index'];
-                $receivedBlock->timestamp = $mBlock['timestamp'];
-                $receivedBlock->data = $mBlock['data'];
-                $receivedBlock->previousHash = isset($mBlock['previousHash']) ? $mBlock['previousHash'] : null;
-                $receivedBlock->hash = isset($mBlock['hash']) ? $mBlock['hash'] : null;
-                $receivedBlock->nonce = $mBlock['nonce'];
-
-                //todo: validate nonce
-
-
-                //$blockchain->addBlock(new Block( time(), $transactionBlock));
-                $block = $blockchain->getLatestBlock();
-
-                //check if block is already synced
-                //if it is, do nothing
-
-               // if (!isSynced($blockchain, $block))
-                 {
-
-                    //accept block if its previous hash matches with the has of the previous block on your chain
-                    //or if you have no block and its previous hash is null: implies it is the first in the block
-                    if ($block->hash == $receivedBlock->previousHash || $block == null && $receivedBlock->previousHash == null) {
-                        $blockchain->addBlock($receivedBlock, true);
-                        echo "New Received Block has been added to blockchain\n";
-                        markAsSynced($receivedBlock);
-                    } else
-                if ($block->hash == $receivedBlock->hash) {
-                        echo "New block already exists on current blockchain\n";
-                        markAsSynced($receivedBlock);
-                    } else {
-                        echo "Received block discarded because it is invalid\n";
-                    }
-                }
-                // else{
-                //     echo "Transaction is already synced. Block discarded\n"; 
-                // }
-            }
-
-            if ($transaction["type"] == "blockchain") {
-
-                echo "Received blockchain from network.\n";
-
-                $chain = $transaction["data"];
-
-
-
-                $blocks = [];
-                //chain is an array
-                foreach ($chain as $item) {
-                    $block = new Block();
-                    foreach ($item as $key => $value) {
-                        $block->$key = $value;
-                    }
-
-                    //add to blocks
-                    $blocks[] = $block;
-                }
-
-                //temporarily store old chain
-                $oldChain = $blockchain->chain;
-
-
-                //check length of your chain
-                if (sizeof($blockchain->chain) < sizeof($blocks)) {
-                    //received chain is longer, 
-                    //replace local chain with this one
-
-                    $blockchain->chain = $blocks;
-
-                    if ($blockchain->isValid()) {
-                        echo "Discarded own blockchain for received block\n";
-                        //  $blockchain->SaveBlockchain();
-                    } else {
-                        echo "Received blockchain is not valid, discarded\n";
-                        $blockchain->chain = $oldChain;
-                    }
-                } else {
-                    echo "Received blockchain is not longer than local. Discarded.\n";
+                // Check if the complete message has been received
+                if (strpos($data, "\n") !== false) {
+                    break;
                 }
             }
-        }
-  
+
+            if (!empty($data)) {
+                $transaction = json_decode($data, true); // decode transaction data from JSON
+
+
+
+                echo "Received Data from Client: $data\n\n";
+                //type of data received can be a block, or a whole blockchain  
+
+                if ($transaction["type"] == "block") {
+
+                    echo "Received block from network.\n";
+
+                    $mBlock = $transaction['data'];
+
+                    $receivedBlock = new Block();
+
+                    $receivedBlock->index = $mBlock['index'];
+                    $receivedBlock->timestamp = $mBlock['timestamp'];
+                    $receivedBlock->data = $mBlock['data'];
+                    $receivedBlock->previousHash = isset($mBlock['previousHash']) ? $mBlock['previousHash'] : null;
+                    $receivedBlock->hash = isset($mBlock['hash']) ? $mBlock['hash'] : null;
+                    $receivedBlock->nonce = $mBlock['nonce'];
+
+                    //todo: validate nonce
+
+
+                    //$blockchain->addBlock(new Block( time(), $transactionBlock));
+                    $block = $blockchain->getLatestBlock();
+
+                    //check if block is already synced
+                    //if it is, do nothing
+
+                    // if (!isSynced($blockchain, $block))
+                    {
+
+                        //accept block if its previous hash matches with the has of the previous block on your chain
+                        //or if you have no block and its previous hash is null: implies it is the first in the block
+                        if ($block->hash == $receivedBlock->previousHash || $block == null && $receivedBlock->previousHash == null) {
+                            $blockchain->addBlock($receivedBlock, true);
+                            echo "New Received Block has been added to blockchain\n";
+                           // markAsSynced($receivedBlock);
+                        } else
+                    if ($block->hash == $receivedBlock->hash) {
+                            echo "New block already exists on current blockchain\n";
+                           // markAsSynced($receivedBlock);
+                        } else {
+                            echo "Received block discarded because it is invalid\n";
+                        }
+                    }
+                    // else{
+                    //     echo "Transaction is already synced. Block discarded\n"; 
+                    // }
+                }
+                if ($transaction["type"] == "blockchain") {
+
+                    echo "Received blockchain from network.\n";
+
+                    $chain = $transaction["data"];
+
+
+
+                    $blocks = [];
+                    //chain is an array
+                    foreach ($chain as $item) {
+                        $block = new Block();
+                        foreach ($item as $key => $value) {
+                            $block->$key = $value;
+                        }
+
+                        //add to blocks
+                        $blocks[] = $block;
+                    }
+
+                    //temporarily store old chain
+                    $oldChain = $blockchain->chain;
+
+
+                    //check length of your chain
+                    if (sizeof($blockchain->chain) < sizeof($blocks)) {
+                        //received chain is longer, 
+                        //replace local chain with this one
+
+                        $blockchain->chain = $blocks;
+
+                        if ($blockchain->isValid()) {
+                            echo "Discarded own blockchain for received block\n";
+                            //  $blockchain->SaveBlockchain();
+                        } else {
+                            echo "Received blockchain is not valid, discarded\n";
+                            $blockchain->chain = $oldChain;
+                        }
+                    } else {
+                        echo "Received blockchain is not longer than local. Discarded.\n";
+                    }
+                }
+            }
+
+            echo "Done Processing Received Data.\n";
         }
         // Close the client connection when you're done
         fclose($client);
@@ -292,16 +308,18 @@ while (true) {
 
 function  markAsSynced($receivedBlock)
 {
+   
+  
     $transaction = json_decode($receivedBlock->data);
     $transactionId = $transaction->transactionId;
-
+    echo $transactionId . " Is being synced";
     $mTransaction = new Transaction($transactionId);
+    echo $transactionId . " has been synced";
     if ($mTransaction != null) {
         $mTransaction->markAsSynced();
-        echo $transactionId ." Marked as synced";
-    }
-    else{
-        echo $transactionId ." NOT Marked as synced";
+        echo $transactionId . " Marked as synced";
+    } else {
+        echo $transactionId . " NOT Marked as synced";
     }
 }
 
@@ -315,7 +333,7 @@ function isSynced($chain, $block)
     $found = 0;
     $blockTransaction = json_decode($block->data);
     $id = $blockTransaction->transactionId;
-    echo 'Checking if received block is synced: '.$id."\n\n";
+    echo 'Checking if received block is synced: ' . $id . "\n\n";
     foreach ($chain as $block) {
         $transaction = json_decode($block->data);
         $transactionId = $transaction->transactionId;
@@ -323,7 +341,7 @@ function isSynced($chain, $block)
             $found++;
         }
     }
-    echo 'Synced status of '.$id." => ".$found."\n\n";
+    echo 'Synced status of ' . $id . " => " . $found . "\n\n";
 
     return $found > 0;
 }
@@ -392,9 +410,9 @@ function  validateTransactions($chain)
                 "medicines" => $medicineArray
             );
 
- 
+
             $arr1 = $transactionBlock;
-            $arr2 = json_decode($block->data,true);        
+            $arr2 = json_decode($block->data, true);
 
             //sort arrays by keys
             $arr1 = ksort($arr1);
@@ -402,10 +420,10 @@ function  validateTransactions($chain)
 
             if ($arr1 == $arr2) {
                 $mTransaction->markAsValid(1);
-                echo $mTransaction->getId()." > Transaction is valid against blockchain\n";
+                echo $mTransaction->getId() . " > Transaction is valid against blockchain\n";
             } else {
                 $mTransaction->markAsValid(0);
-                echo $mTransaction->getId()." > Transaction is NOT valid against blockchain\n";
+                echo $mTransaction->getId() . " > Transaction is NOT valid against blockchain\n";
             }
         }
     }
@@ -420,7 +438,7 @@ function broadcast($data, $transaction = null)
         foreach ($java_peers as $java_peer) {
             echo "Sending to $java_peer \n\n";
 
-           // echo "Sending to $java_peer : $data\n\n";
+            // echo "Sending to $java_peer : $data\n\n";
             $socket = stream_socket_client("tcp://$java_peer", $errno, $errorMessage, 10);
             if ($socket === false) {
                 echo "Failed to connect to $java_peer: $errorMessage\n";

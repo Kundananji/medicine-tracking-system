@@ -21,7 +21,7 @@ if(sizeof($records) == 0){
                 Date of Receipt
             </th>
             <th>
-                Buyer
+                Received By
             </th>
             <th>
                 Seller

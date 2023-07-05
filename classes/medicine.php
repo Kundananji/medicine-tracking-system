@@ -95,9 +95,9 @@ class Medicine implements \JsonSerializable
   {
     $records = []; //empty array of records
     try {
-      $sql = "SELECT * FROM medicine WHERE 1 AND Manufacturer_ID=? ";
+      $sql = "SELECT * FROM medicine m WHERE 1 AND Manufacturer_ID=? OR m.ID IN(SELECT Medicine_ID FROM transaction_medicine tm INNER JOIN `transaction` t on tm.Transaction_ID = t.ID INNER JOIN transaction_actor ta ON ta.Transaction_ID = t.ID WHERE ta.User_ID =?) ";
       $stmt = Database::getConnection()->prepare($sql);
-      $stmt->bind_param("i",$userId);
+      $stmt->bind_param("ii",$userId,$userId);
       $stmt->execute();
       $query = $stmt->get_result();
       if ($query) {

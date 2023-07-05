@@ -26,7 +26,7 @@ if(sizeof($records) == 0){
             <th>
             </th>
             <th>
-                ID
+                Medicine ID
             </th>
             <th>
                 Transaction
@@ -43,6 +43,9 @@ if(sizeof($records) == 0){
             <th>
                 Amount
             </th>
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -55,7 +58,7 @@ if(sizeof($records) == 0){
                <?php echo ++$rowCount;?>
           </td>
           <td>
-              <?php echo $mTransactionMedicine->getId(); ?> 
+              <?php echo $mTransactionMedicine->getMedicine()->getId(); ?> 
           </td>
           <td>
               <?php echo $mTransactionMedicine->getTransaction(); ?> 
@@ -71,6 +74,11 @@ if(sizeof($records) == 0){
           </td>
           <td>
               <?php echo $mTransactionMedicine->getAmount(); ?> 
+          </td>
+          <td>
+ 
+              <a href="javascript:Transaction.viewTrace({medicineId: '<?php echo $mTransactionMedicine->getMedicine()->getId(); ?> '})"><i class="bi bi-geo-fill"></i> View Trace</a>
+
           </td>
       </tr>
 <?php

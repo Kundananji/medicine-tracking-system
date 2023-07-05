@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group m-3">
                         <label for="gtin">GTIN</label>
-                        <input type="text"  id="gtin" class="form-control" name="gtin" placeholder="Enter GTIN" value="<?php echo $medicine!=null?$medicine->getGtin():'';?>" required/>
+                        <input type="text"  id="gtin" class="form-control" name="gtin" placeholder="Enter GTIN" value="<?php echo $medicine!=null?$medicine->getGtin():'';?>"/>
                     </div>
                     <div class="form-group m-3">
                         <label for="serialNumber">Serial Number</label>

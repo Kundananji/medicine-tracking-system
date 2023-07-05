@@ -78,6 +78,7 @@ try {
  $damageNotificationMedicine = new DamageNotificationMedicine();
 
  $failed = 0;
+ $details = "";
  for ($i = 0; $i < sizeof($medicines); $i++) {
    $medicine = $medicines[$i];
    $id = 0;
@@ -121,7 +122,7 @@ try {
    
   
 
-   $details = $medicine['damageDetails'];
+   $details .= $medicine['damageDetails'];
 
    if ($details === "") {
      //roll back whatever has been done
@@ -159,13 +160,12 @@ try {
  }
 
  //at this point, we can create the transction that will be shared with blockchain network
- $transactionType = "Delivery";
+ $transactionType = "Damage";
  $dateOfTransaction = date("Y-m-d");
  $actors = [
    array("userId" => $reportedbyId, "roleName" => "Reporter")
  ];
 
- $details = "Delivery of Medicine";
 
  $transaction = new Transaction();
  $transaction->createTransaction(

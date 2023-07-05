@@ -1,8 +1,6 @@
 <?php
   session_start();
-  require("../classes/database.php");
-  require("../classes/receiptnotification.php");
-  require("../classes/user.php");
+  include('../includes/autoload.php');
 ?>
 <div class="card">
     <div class="card-header">
@@ -43,10 +41,14 @@
                             $user = new User;
                             $records =$user->getAllRecords();
                             foreach($records as $mUser){
-                                if($mUser->getId() == $_SESSION['userId']){
+                                if($mUser->getId() == $_SESSION['userId'] ){
                                     continue;
                                  }
+                                 else
+                                 if($mUser->getUserType()->getCanSale()==1 || $mUser->getUserType()->getCanDeliver()==1)
+                                 {
                                  echo'<option value="'.$mUser->getId().'">'.$mUser->getName().'</option>';
+                                 }
                                }
                          ?>
                          </select>

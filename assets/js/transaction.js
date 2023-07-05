@@ -138,16 +138,16 @@ let traceMedicine=(data)=>{
  */
 let viewTrace=(data)=>{
     let loader =  `<div class="alert alert-warning"><i class="bi bi-hourglass"></i> Loading....</div>`;
-
-    $('#showTransactionModal').modal('show');
-    $('#show-transaction-modal-body').html(loader);
+    $('#showTransactionModal').modal('hide');
+    $('#showTraceModal').modal('show');
+    $('#show-trace-modal-body').html(loader);
      
     $.ajax({
         url:"ajax/view-medicine-trace.php",
         type:"get",
         data:data,
         success:(resp)=>{
-            $('#show-transaction-modal-body').html(resp);
+            $('#show-trace-modal-body').html(resp);
  
         }
     })

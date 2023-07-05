@@ -13,6 +13,7 @@ require("../classes/user.php");
       <div class="col">
         <form method="post" id="form-add-notification" onsubmit="Prescription.submitForm(event);">
           <input type="hidden" name="id" id="id" value="0" />
+          <input type="hidden" name="transactionType" id="transactionType" value="Prescription" />
           <div class="form-group m-3">
             <label for="prescriptionDate">Prescription Date</label>
             <input type="date" id="prescriptionDate" class="form-control" name="prescriptionDate" placeholder="Enter Prescription Date" required />

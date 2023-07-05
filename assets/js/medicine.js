@@ -16,6 +16,16 @@ let Medicine = (function ($) {
  }
 
  let displaySelected = () =>{
+    //check if the type is set
+
+    let transactionType = null;
+    if(document.getElementById('transactionType')){
+       transactionType = $('#transactionType').val();
+    } 
+    let label = 'Amount';
+    if(transactionType == 'Prescription'){
+        label = 'Dosage';
+    }
     let output =`
                 <h6>Added Medicines</h6>
                  <table class="table table-bordered table-striped">
@@ -23,6 +33,12 @@ let Medicine = (function ($) {
                      <tr>
                         <th>
 
+                        </th>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Serial Number
                         </th>
                         <th>
                            Name
@@ -54,6 +70,12 @@ let Medicine = (function ($) {
                          <input type="hidden" name="selected-medicines[]" value="${medicine.id}"/>
                         </td>
                         <td>
+                        ${medicine.id}
+                       </td>
+                       <td>
+                       ${medicine.serialNumber}
+                      </td>
+                        <td>
                          ${medicine.name}
                         </td>
                         <td>
@@ -66,7 +88,7 @@ let Medicine = (function ($) {
                          ${medicine.manufacturer.name}
                         </td>
                         <td>
-                        <input type="text" class="form-control" value="" id="med_${medicine.id}" placeholder="Enter Amount"/>
+                        <input type="text" class="form-control" value="" id="med_${medicine.id}" placeholder="Enter ${label}"/>
                        </td>
                        
                         <td>
@@ -146,6 +168,12 @@ let Medicine = (function ($) {
 
                         </th>
                         <th>
+                          ID
+                        </th>
+                        <th>
+                        Serial Number
+                        </th>
+                        <th>
                            Name
                         </th>
                         <th>
@@ -170,6 +198,12 @@ let Medicine = (function ($) {
                         <td>
                          <input type="checkbox" name="medicines[]" value="${medicine.id}"/>
                         </td>
+                        <td>
+                        ${medicine.id}
+                       </td>
+                       <td>
+                       ${medicine.serialNumber}
+                      </td>
                         <td>
                          ${medicine.name}
                         </td>
@@ -253,10 +287,13 @@ let submitForm = (e)=>{
         alert('Expiry Date is missing');
         return;
     }
+    //gtin is optional; some medicine packaging doesn't have it
+    /*
     if(gtin==null || gtin==""){
         alert('GTIN is missing');
         return;
     }
+    */
     if(serialNumber==null || serialNumber==""){
         alert('Serial Number is missing');
         return;
