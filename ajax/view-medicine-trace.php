@@ -69,6 +69,8 @@ if(sizeof($records) == 0){
                 break;
                 case 'Prescription': echo 'Prescribed';
                 break;
+                case 'Damage': echo 'Damage';
+                break;
                 
                 default:
                 echo 'Transaction';

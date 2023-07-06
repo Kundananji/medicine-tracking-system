@@ -22,7 +22,8 @@
      *                   - Manufacturer
      *                   - Retailer
      *                   - Hospital 
-     *                   - Wholesaler                  
+     *                   - Wholesaler
+     *                   - Miner                  
      * @return array containing the status and the message. 
      *          status: can be success or failure
      *          message: add more details of the status

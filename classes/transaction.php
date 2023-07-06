@@ -198,7 +198,7 @@ class Transaction
             $sql = "SELECT * FROM `transaction` t WHERE 1 AND `valid`= 1 ";
 
         
-            $sql .= " AND ( t.ID IN(SELECT tm.Transaction_ID FROM transaction_medicine tm INNER JOIN medicine m ON tm.Medicine_ID = m.Id WHERE t.ID = tm.Transaction_ID AND m.Id=? ))ORDER BY Date_Of_Transaction ASC ";
+            $sql .= " AND ( t.ID IN(SELECT tm.Transaction_ID FROM transaction_medicine tm INNER JOIN medicine m ON tm.Medicine_ID = m.Id WHERE t.ID = tm.Transaction_ID AND m.Id=? ))ORDER BY Date_Of_Transaction ASC, t.ID ASC ";
     
 
 

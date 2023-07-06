@@ -271,7 +271,7 @@
           </li>
 
           <li>
-            <a href="javascript:void(0)" onclick="Mine.downloadJavaClient()">
+            <a href="/mining-tool/mts-mining-tool.jar">
               <i class="bi bi-download"></i><span>Download Java Client</span>
             </a>
           </li>
